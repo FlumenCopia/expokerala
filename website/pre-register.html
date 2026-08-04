@@ -307,45 +307,6 @@
         .pr-submit-btn:hover::after { opacity: 1; }
         .pr-submit-btn:active { transform: translateY(0); }
 
-        .pr-cal-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
-
-        .pr-cal-label {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-
-        .pr-cal-btns { display: flex; gap: 10px; }
-
-        .pr-cal-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 11px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            text-decoration: none;
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            transition: all 0.25s ease;
-        }
-        .pr-cal-btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.10); }
-        .pr-cal-btn.gcal  { color: #4285F4; border-color: rgba(66,133,244,0.3); }
-        .pr-cal-btn.gcal:hover  { background: rgba(66,133,244,0.12); border-color: #4285F4; }
-        .pr-cal-btn.ical  { color: #8b5cf6; border-color: rgba(139,92,246,0.3); }
-        .pr-cal-btn.ical:hover  { background: rgba(139,92,246,0.12); border-color: #8b5cf6; }
-        .pr-cal-btn.outlook { color: #0078d4; border-color: rgba(0,120,212,0.3); }
-        .pr-cal-btn.outlook:hover { background: rgba(0,120,212,0.12); border-color: #0078d4; }
-
         #pr-success {
             display: none;
             position: fixed;
@@ -387,39 +348,6 @@
         .success-title { font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 12px; }
         .success-sub { font-size: 15px; color: var(--text-muted); max-width: 420px; line-height: 1.7; margin-bottom: 32px; }
 
-        .success-cal-area {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px 36px;
-            max-width: 480px;
-            width: 100%;
-            margin-bottom: 28px;
-        }
-
-        .success-cal-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; color: var(--yellow); }
-        .success-cal-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-
-        .success-cal-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 22px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            transition: all 0.25s ease;
-        }
-        .success-cal-btn:hover { transform: translateY(-2px); }
-        .success-cal-btn.gcal    { background: rgba(66,133,244,0.1);  border-color: #4285F4; color: #7baeff; }
-        .success-cal-btn.ical    { background: rgba(139,92,246,0.1);  border-color: #8b5cf6; color: #c4b5fd; }
-        .success-cal-btn.outlook { background: rgba(0,120,212,0.1);   border-color: #0078d4; color: #60aeff; }
-
         .success-back-btn {
             color: var(--text-muted);
             font-size: 14px;
@@ -459,8 +387,6 @@
             .pr-form-card { padding: 28px 22px; }
             .pr-benefits { grid-template-columns: 1fr; }
             .pr-header { padding: 14px 20px; }
-            .pr-cal-btns { flex-direction: column; }
-            .success-cal-btns { flex-direction: column; align-items: center; }
         }
 
         @media (max-width: 480px) {
@@ -494,23 +420,7 @@
     <p class="success-sub">
         Thank you, <strong id="success-name"></strong>! Your spot at
         <strong>Masters Kerala RE 2.0 EXPO26</strong> is secured.
-        Add the event to your calendar so you don't miss it.
     </p>
-    <div class="success-cal-area">
-        <p class="success-cal-title">&#128197; Add to Your Calendar</p>
-        <div class="success-cal-btns">
-            <a href="#" id="success-gcal" target="_blank" class="success-cal-btn gcal">
-                <img src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_20_2x.png" alt="" style="width:18px;height:18px;border-radius:4px;">
-                Google Calendar
-            </a>
-            <a href="#" id="success-ical" class="success-cal-btn ical">
-                <i class="fa-brands fa-apple"></i> Apple / iCal
-            </a>
-            <a href="#" id="success-outlook" target="_blank" class="success-cal-btn outlook">
-                <i class="fa-regular fa-calendar"></i> Outlook
-            </a>
-        </div>
-    </div>
     <a href="index.html" class="success-back-btn">&#8592; Back to Main Site</a>
 </div>
 
@@ -663,22 +573,6 @@
                     Confirm Pre-Registration
                 </button>
 
-                <div class="pr-cal-section">
-                    <p class="pr-cal-label">Add Event to Calendar</p>
-                    <div class="pr-cal-btns">
-                        <a href="#" id="form-gcal" target="_blank" class="pr-cal-btn gcal">
-                            <img src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_20_2x.png" alt="" style="width:15px;height:15px;border-radius:3px;">
-                            Google
-                        </a>
-                        <a href="#" id="form-ical" class="pr-cal-btn ical">
-                            <i class="fa-brands fa-apple"></i> iCal
-                        </a>
-                        <a href="#" id="form-outlook" target="_blank" class="pr-cal-btn outlook">
-                            <i class="fa-regular fa-calendar"></i> Outlook
-                        </a>
-                    </div>
-                </div>
-
             </form>
         </div>
     </div>
@@ -694,27 +588,6 @@
     var EVENT_LOCATION = 'Lulu Mall, Trivandrum, Kerala, India';
     var EVENT_START    = '20260925T043000Z';  // Sep 25, 10:00 AM IST = 04:30 UTC
     var EVENT_END      = '20260927T133000Z';  // Sep 27,  7:00 PM IST = 13:30 UTC
-
-    function buildGoogleCalUrl() {
-        var params = new URLSearchParams({
-            text:     EVENT_TITLE,
-            dates:    EVENT_START + '/' + EVENT_END,
-            details:  EVENT_DESC,
-            location: EVENT_LOCATION
-        });
-        return 'https://www.google.com/calendar/render?action=TEMPLATE&' + params.toString();
-    }
-
-    function buildOutlookUrl() {
-        var params = new URLSearchParams({
-            startdt:  '2026-09-25T10:00:00',
-            enddt:    '2026-09-27T19:00:00',
-            subject:  EVENT_TITLE,
-            body:     EVENT_DESC,
-            location: EVENT_LOCATION
-        });
-        return 'https://outlook.live.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&' + params.toString();
-    }
 
     function buildICalContent() {
         return [
@@ -736,8 +609,7 @@
         ].join('\r\n');
     }
 
-    function downloadIcal(e) {
-        e.preventDefault();
+    function downloadIcalFile() {
         var blob = new Blob([buildICalContent()], { type: 'text/calendar;charset=utf-8' });
         var url  = URL.createObjectURL(blob);
         var a    = document.createElement('a');
@@ -749,17 +621,9 @@
         URL.revokeObjectURL(url);
     }
 
-    function wireCalButtons(gcalId, icalId, outlookId) {
-        var gcal    = document.getElementById(gcalId);
-        var ical    = document.getElementById(icalId);
-        var outlook = document.getElementById(outlookId);
-        if (gcal)    gcal.href    = buildGoogleCalUrl();
-        if (outlook) outlook.href = buildOutlookUrl();
-        if (ical)    ical.addEventListener('click', downloadIcal);
+    function autoAddToCalendar() {
+        downloadIcalFile();
     }
-
-    wireCalButtons('form-gcal',    'form-ical',    'form-outlook');
-    wireCalButtons('success-gcal', 'success-ical', 'success-outlook');
 
     /* === DAY SELECTOR === */
     var selectedDays = [];
@@ -824,6 +688,7 @@
         var btn = document.getElementById('pr-submit');
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+        autoAddToCalendar();
 
         setTimeout(function() {
             document.getElementById('success-name').textContent = name;
