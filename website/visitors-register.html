@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register as a visitor for Masters Kerala RE Expo 2026 - Kerala's Premier Renewable Energy Exhibition.">
+    <title>Visitor Registration - Masters Expo 2026</title>
+
+    <link rel="icon" type="image/png" href="./assets/logo/favic.png">
+    <link rel="stylesheet" href="./style-css/main.css">
+    <link rel="stylesheet" href="./style-css/mscol.css">
+    <link rel="stylesheet" href="./style-css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header hdr2">
+        <div class="hdr-cont">
+            <div class="container">
+                <div class="header-conts">
+                    <div class="hdr-logos">
+                        <a href="index.html"><img src="./assets/logo/logo3.png" alt="Masters Expo"></a>
+                        <img src="./assets/logo/1.png" alt="Partner Logo">
+                    </div>
+                    <div class="pg-cnt-btn">
+                        <a href="index.html#cnct"><div class="ind-cnct-btn"><p>Contact</p></div></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="vis-pg">
+        <section class="vis-sec">
+            <div class="container">
+                <div class="visit-reg-contain">
+                    <div class="row">
+                        <!-- REGISTRATION FORM -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="vist-form-contain">
+                                <h2><span>Register</span> Now</h2>
+                                <form id="visitorRegisterForm" novalidate>
+                                    <input type="hidden" name="country" id="country" value="India">
+
+                                    <!-- Country Code -->
+                                    <div class="vist-input">
+                                        <select name="countryCode" id="code" required>
+                                            <option data-country="India" value="91" selected>India (+91)</option>
+                                            <option data-country="United Arab Emirates" value="971">UAE (+971)</option>
+                                            <option data-country="Malaysia" value="60">Malaysia (+60)</option>
+                                            <option data-country="Indonesia" value="62">Indonesia (+62)</option>
+                                            <optgroup label="Other countries">
+                                                <option data-country="Australia" value="61">Australia (+61)</option>
+                                                <option data-country="Canada" value="1">Canada (+1)</option>
+                                                <option data-country="Germany" value="49">Germany (+49)</option>
+                                                <option data-country="Singapore" value="65">Singapore (+65)</option>
+                                                <option data-country="UK" value="44">UK (+44)</option>
+                                                <option data-country="USA" value="1">USA (+1)</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+
+                                    <!-- Mobile -->
+                                    <div class="vist-input option2">
+                                        <input class="fr-rmv-str" type="number" placeholder="Your Phone" name="mobile" id="mobile" required>
+                                        <span class="req-star phn">*</span>
+                                    </div>
+
+                                    <!-- Name -->
+                                    <div class="vist-input option2">
+                                        <input class="fr-rmv-str" type="text" name="name" placeholder="Your Name" required>
+                                        <span class="req-star nm">*</span>
+                                    </div>
+
+                                    <!-- Visit Profile -->
+                                    <div class="vist-input option2">
+                                        <select name="visit_profile" required id="visitProfile">
+                                            <option value="">Select Visit Profile</option>
+                                            <option value="Component Manufacturer / Supplier">Component Manufacturer / Supplier</option>
+                                            <option value="EPC/ MNRE vendors / system integrator">EPC/ MNRE Vendors / System Integrator</option>
+                                            <option value="EPC professional / Employee">EPC Professional / Employee</option>
+                                            <option value="Masters Association member">Masters Association Member</option>
+                                            <option value="Government Organization">Government Organization</option>
+                                            <option value="Investor / Project Developer">Investor / Project Developer</option>
+                                            <option value="Distributor/wholesaler/trader">Distributor / Wholesaler / Trader</option>
+                                            <option value="Media">Media</option>
+                                            <option value="Student">Student</option>
+                                            <option value="Consumer">Consumer</option>
+                                            <option value="Public">Public</option>
+                                        </select>
+                                        <span class="req-star vstr">*</span>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="vist-input">
+                                        <input class="fr-rmv-str" type="email" placeholder="Your Email" name="email">
+                                    </div>
+
+                                    <!-- Company -->
+                                    <div class="vist-input">
+                                        <input class="fr-rmv-str" type="text" placeholder="Enter Company Name" name="company_name">
+                                        <span class="req-star orgtn">*</span>
+                                    </div>
+
+                                    <!-- Designation -->
+                                    <div class="vist-input">
+                                        <input class="fr-rmv-str" type="text" placeholder="Enter Your Designation" name="designation">
+                                        <span class="req-star dsgntn">*</span>
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div class="vist-input">
+                                        <textarea name="address" placeholder="Enter Address"></textarea>
+                                    </div>
+
+                                    <!-- City -->
+                                    <div class="vist-input option2">
+                                        <input class="fr-rmv-str" type="text" placeholder="City" name="city">
+                                    </div>
+
+                                    <!-- District -->
+                                    <div class="vist-input">
+                                        <input class="fr-rmv-str" type="text" placeholder="District/Region" name="district">
+                                    </div>
+
+                                    <!-- State -->
+                                    <div class="vist-input">
+                                        <input class="fr-rmv-str" type="text" placeholder="State/Province" name="state">
+                                    </div>
+
+                                    <!-- Pincode -->
+                                    <div class="vist-input">
+                                        <input class="fr-rmv-str" type="number" placeholder="Pincode/Zipcode" name="pincode">
+                                        <span class="req-star pncd">*</span>
+                                    </div>
+
+                                    <!-- Landmark -->
+                                    <div class="vist-input">
+                                        <input class="fr-rmv-str" type="text" placeholder="Enter Landmark" name="landmark">
+                                    </div>
+
+                                    <!-- Agree checkbox -->
+                                    <div class="vist-input">
+                                        <div style="display:flex;align-items:baseline;gap:10px;">
+                                            <input type="checkbox" id="receiveupdate" name="receiveupdate" value="receiveupdate">
+                                            <label for="receiveupdate" class="chck-lab">
+                                                <p style="font-size:14px;">I agree to receive all updates through SMS and Email</p>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Submit -->
+                                    <div class="vist-input">
+                                        <button type="submit" id="visit-btn" class="vist-regis-btn" disabled>Register</button>
+                                        <button type="button" class="buttonload vist-regis-btn" id="loading-btn" style="display:none;">
+                                            <i class="fa fa-spinner fa-spin"></i> Submitting...
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT SIDE EVENT INFO -->
+                        <div class="col-md-6 col-lg-8">
+                            <div class="visit-cont-contain">
+                                <div class="visit-cont-blk">
+                                    <div class="vis-img">
+                                        <a href="index.html"><img src="./assets/logo/logo3.png" alt="Masters Expo Logo"></a>
+                                    </div>
+                                    <div class="vist-cont">
+                                        <div class="vist-dt-blk">
+                                            <div class="mnth"><span>January 2026</span></div>
+                                            <div class="vis-dt">
+                                                <span><ul><li>9</li><li>10</li><li>11</li></ul></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUCCESS MODAL -->
+        <div class="badge-modal-contain">
+            <div class="bdg-overlay"></div>
+            <div class="bdg-modal">
+                <div class="bdg-contain">
+                    <div><span class="close"><i class="fa-solid fa-xmark"></i></span></div>
+                    <div class="bdge-cont"><p>Registration Successful! 🎉</p></div>
+                    <div class="vist-dt-blk">
+                        <div class="mnth"><span>January 2026</span></div>
+                        <div class="vis-dt"><span><ul><li>9</li><li>10</li><li>11</li></ul></span></div>
+                    </div>
+                    <div class="generate-bdg">
+                        <a id="generateBadge" href="#" target="_blank">Generate &amp; Print Badge</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="foot-fl">
+                <div class="foot-lft">
+                    <div class="foot-logo">
+                        <a href="index.html"><img src="./assets/logo/logoblc.png" alt="Masters Logo"></a>
+                        <p>Powering the World's Clean Energy Future</p>
+                        <a href="https://solarmasters.org/" target="_blank"><h3>Masters Association</h3></a>
+                    </div>
+                </div>
+                <div class="foot-rgt">
+                    <div class="foot-lst">
+                        <h3>Connect With Us</h3>
+                        <ul>
+                            <div class="cnt-cont-flx">
+                                <div class="cnt-rnd-bx"><i class="fa-solid fa-envelope"></i></div>
+                                <a href="mailto:info@solarmasters.org">
+                                    <div><p class="fr-fd">Work with us</p><p>info@solarmasters.org</p></div>
+                                </a>
+                            </div>
+                            <div class="cnt-cont-flx">
+                                <div class="cnt-rnd-bx"><i class="fa-solid fa-phone"></i></div>
+                                <a href="tel:+918129838288">
+                                    <div><p class="fr-fd">Call Us</p><p>+91 81298 38288</p></div>
+                                </a>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Sync country hidden field from select
+        document.getElementById('code').addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            document.getElementById('country').value = selected.getAttribute('data-country') || 'India';
+        });
+
+        // Enable register button only when checkbox is checked
+        document.getElementById('receiveupdate').addEventListener('change', function() {
+            document.getElementById('visit-btn').disabled = !this.checked;
+        });
+
+        // Adjust required fields based on visit profile
+        document.getElementById('visitProfile').addEventListener('change', function() {
+            const relaxed = ['Public', 'Consumer', 'Student', 'Media'];
+            const isRelaxed = relaxed.includes(this.value);
+            const fields = ['company_name', 'designation', 'pincode'];
+            fields.forEach(f => {
+                const el = document.querySelector(`[name="${f}"]`);
+                if (el) el.required = !isRelaxed;
+            });
+        });
+
+        // Close modal
+        document.querySelectorAll('.bdg-contain .close, .bdg-overlay').forEach(el => {
+            el.addEventListener('click', () => {
+                document.querySelector('.bdg-overlay').classList.remove('show');
+                document.querySelector('.bdg-modal').classList.remove('show');
+            });
+        });
+
+        // FORM SUBMISSION
+        document.getElementById('visitorRegisterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const btn      = document.getElementById('visit-btn');
+            const loadBtn  = document.getElementById('loading-btn');
+            btn.style.display     = 'none';
+            loadBtn.style.display = 'inline-block';
+
+            const formData = new FormData(this);
+            formData.append('company_id',    '12');
+            formData.append('exhibition_id', '20');
+
+            fetch('https://event.rowbest.in/api/master-visitor-reg', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status) {
+                    const visitor = {
+                        name:         formData.get('name'),
+                        profile:      formData.get('visit_profile'),
+                        company_name: formData.get('company_name'),
+                        designation:  formData.get('designation'),
+                        city:         formData.get('city'),
+                        mobile_code:  formData.get('countryCode'),
+                        mobile_number:formData.get('mobile')
+                    };
+                    const qrId   = data.id   || data.qr_id   || '';
+                    const badgeNo= data.badge_id || data.badge_no || '';
+                    const url = `badge.html?qr_id=${qrId}&badge_no=${badgeNo}&visitor=${encodeURIComponent(JSON.stringify(visitor))}`;
+                    document.getElementById('generateBadge').href = url;
+                    document.querySelector('.bdg-overlay').classList.add('show');
+                    document.querySelector('.bdg-modal').classList.add('show');
+                } else {
+                    alert(data.message || data.msg || 'Registration failed. Please check your inputs.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Network error. Please check your connection and try again.');
+            })
+            .finally(() => {
+                btn.style.display     = 'inline-block';
+                loadBtn.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
