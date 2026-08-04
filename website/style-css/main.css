@@ -416,6 +416,10 @@ top: 0 ;
     z-index: 4;
 }
 
+.visitor-header {
+    background-color: #00252e;
+}
+
 .hdr-logos {
     display: flex;
     align-items: center;
@@ -1609,6 +1613,7 @@ top: 0 ;
 
 .visit-cont-blk {
 
+    background-color: #00252e;
     height: 100%;
 }
 
@@ -1930,7 +1935,8 @@ top: 0 ;
     font-weight: 500;
 }
 .vis-img img{
-    width: 80%;
+    width: 72%;
+    max-width: 620px;
     object-fit: contain;
     margin-bottom: 30px;
 }
