@@ -5,14 +5,11 @@ function doPost(e) {
   sheet.appendRow([
     data.timestamp || new Date().toISOString(),
     data.name || '',
-    data.countryCode || '',
     data.mobile || '',
-    data.phone || '',
     data.email || '',
     data.city || '',
     data.category || '',
     data.days || '',
-    data.source || ''
   ]);
 
   return ContentService

@@ -680,14 +680,11 @@
         var registrationData = {
             timestamp: new Date().toISOString(),
             name: name,
-            countryCode: countryCode,
             mobile: mobile,
-            phone: '+' + countryCode + mobile,
             email: email,
             city: city,
             category: cat,
             days: selectedDays.join(', '),
-            source: 'pre-register.html'
         };
 
         submitToGoogleSheet(registrationData)
