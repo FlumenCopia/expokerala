@@ -598,6 +598,12 @@
                     <span class="pr-error" id="mobile-error">Please enter a valid mobile number.</span>
                 </div>
 
+                <div class="pr-field" id="field-email">
+                    <label for="pr-email">Email Address</label>
+                    <input type="email" id="pr-email" name="email" placeholder="you@example.com" autocomplete="email">
+                    <span class="pr-error">Please enter a valid email address.</span>
+                </div>
+
                 <div class="pr-field" id="field-city">
                     <label for="pr-city">City / District</label>
                     <input type="text" id="pr-city" name="city" placeholder="e.g. Trivandrum, Ernakulam..." list="city-list" autocomplete="off">
@@ -793,6 +799,9 @@
 
         var mobile = document.getElementById('pr-mobile').value.trim();
         if (!mobile || !/^\d{7,15}$/.test(mobile)) { showError('pr-mobile'); valid = false; } else { clearError('pr-mobile'); }
+
+        var email = document.getElementById('pr-email').value.trim();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('pr-email'); valid = false; } else { clearError('pr-email'); }
 
         var city = document.getElementById('pr-city').value.trim();
         if (!city) { showError('pr-city'); valid = false; } else { clearError('pr-city'); }
