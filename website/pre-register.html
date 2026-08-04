@@ -519,10 +519,7 @@
 
     <!-- LEFT PANEL -->
     <div class="pr-left">
-        <span class="pr-badge">
-            <span class="dot"></span>
-            Pre-Registration Open
-        </span>
+  
 
         <h1>Secure Your Spot at <span>Kerala's Biggest Energy Expo</span></h1>
 
@@ -603,7 +600,23 @@
 
                 <div class="pr-field" id="field-city">
                     <label for="pr-city">City / District</label>
-                    <input type="text" id="pr-city" name="city" placeholder="e.g. Ernakulam, Thrissur...">
+                    <input type="text" id="pr-city" name="city" placeholder="e.g. Trivandrum, Ernakulam..." list="city-list" autocomplete="off">
+                    <datalist id="city-list">
+                        <option value="Trivandrum (TVM)">
+                        <option value="Kollam">
+                        <option value="Pathanamthitta">
+                        <option value="Alappuzha">
+                        <option value="Kottayam">
+                        <option value="Idukki">
+                        <option value="Ernakulam">
+                        <option value="Thrissur">
+                        <option value="Palakkad">
+                        <option value="Malappuram">
+                        <option value="Kozhikode">
+                        <option value="Wayanad">
+                        <option value="Kannur">
+                        <option value="Kasaragod">
+                    </datalist>
                     <span class="pr-error">Please enter your city or district.</span>
                 </div>
 
