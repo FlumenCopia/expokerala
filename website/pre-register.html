@@ -582,49 +582,6 @@
 <script>
 (function () {
 
-    /* === CALENDAR INTEGRATION === */
-    var EVENT_TITLE    = 'Masters Kerala RE 2.0 EXPO26';
-    var EVENT_DESC     = "Kerala's Premier Renewable Energy Exhibition. Solar, BESS & EV sectors. Free entry for visitors.";
-    var EVENT_LOCATION = 'Lulu Mall, Trivandrum, Kerala, India';
-    var EVENT_START    = '20260925T043000Z';  // Sep 25, 10:00 AM IST = 04:30 UTC
-    var EVENT_END      = '20260927T133000Z';  // Sep 27,  7:00 PM IST = 13:30 UTC
-
-    function buildICalContent() {
-        return [
-            'BEGIN:VCALENDAR',
-            'VERSION:2.0',
-            'PRODID:-//Masters Kerala RE Expo//EN',
-            'CALSCALE:GREGORIAN',
-            'METHOD:PUBLISH',
-            'BEGIN:VEVENT',
-            'DTSTART:' + EVENT_START,
-            'DTEND:'   + EVENT_END,
-            'SUMMARY:' + EVENT_TITLE,
-            'DESCRIPTION:' + EVENT_DESC,
-            'LOCATION:' + EVENT_LOCATION,
-            'STATUS:CONFIRMED',
-            'TRANSP:OPAQUE',
-            'END:VEVENT',
-            'END:VCALENDAR'
-        ].join('\r\n');
-    }
-
-    function downloadIcalFile() {
-        var blob = new Blob([buildICalContent()], { type: 'text/calendar;charset=utf-8' });
-        var url  = URL.createObjectURL(blob);
-        var a    = document.createElement('a');
-        a.href   = url;
-        a.download = 'masters-kerala-re-expo-2026.ics';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
-    function autoAddToCalendar() {
-        downloadIcalFile();
-    }
-
     /* === DAY SELECTOR === */
     var selectedDays = [];
 
@@ -688,7 +645,6 @@
         var btn = document.getElementById('pr-submit');
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-        autoAddToCalendar();
 
         setTimeout(function() {
             document.getElementById('success-name').textContent = name;
