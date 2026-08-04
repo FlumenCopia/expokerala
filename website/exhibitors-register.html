@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register as an Exhibitor for Masters Kerala RE Expo 2026 - Kerala's Premier Renewable Energy Exhibition.">
+    <title>Exhibitor Registration - Masters Expo 2026</title>
+
+    <link rel="icon" type="image/png" href="./assets/logo/favic.png">
+    <link rel="stylesheet" href="./style-css/main.css">
+    <link rel="stylesheet" href="./style-css/mscol.css">
+    <link rel="stylesheet" href="./style-css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        .ex-reg-sec { padding: 4em 0; }
+        .ms-align { align-items: center; display: flex; }
+        .reg-img img { width: 100%; max-height: 500px; object-fit: contain; }
+        .ex-reg-blk .form-input { margin-bottom: 14px; }
+        .ex-reg-blk .form-input input,
+        .ex-reg-blk .form-input select,
+        .ex-reg-blk .form-input textarea {
+            width: 100%; padding: 10px 14px; border: 1px solid #ddd;
+            border-radius: 6px; font-family: var(--text-font); font-size: 14px;
+            box-sizing: border-box; outline: none; transition: border 0.3s;
+        }
+        .ex-reg-blk .form-input input:focus,
+        .ex-reg-blk .form-input select:focus { border-color: #79C143; }
+        .ex-reg-blk .submit-btn {
+            padding: 12px 20px; background-color: #243546;
+            display: block; width: 100%; border-radius: 6px;
+            border: 1px solid #243546; color: #fff; margin-top: 16px;
+            cursor: pointer; transition: all 0.3s; font-family: var(--text-font);
+            font-size: 16px; font-weight: 600;
+        }
+        .ex-reg-blk .submit-btn:hover { background-color: transparent; color: #243546; }
+        .ex-reg-blk h2 { margin-bottom: 24px; color: #243546; }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header hdr2">
+        <div class="hdr-cont">
+            <div class="container">
+                <div class="header-conts">
+                    <div class="hdr-logos">
+                        <a href="index.html"><img src="./assets/logo/logo3.png" alt="Masters Expo"></a>
+                        <img src="./assets/logo/1.png" alt="Partner Logo">
+                    </div>
+                    <div class="pg-cnt-btn">
+                        <a href="index.html#cnct"><div class="ind-cnct-btn"><p>Contact</p></div></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="ex-reg-sec">
+            <div class="container">
+                <div class="row ms-align">
+                    <!-- LEFT IMAGE -->
+                    <div class="col-md-12 col-lg-5">
+                        <div class="reg-img">
+                            <img src="./assets/logo/logo3.png" alt="Masters Expo 2026">
+                        </div>
+                    </div>
+
+                    <!-- REGISTRATION FORM -->
+                    <div class="col-md-12 col-lg-7">
+                        <div class="ex-reg-blk">
+                            <h2>Exhibitor Registration</h2>
+                            <form id="exhibitorForm" novalidate>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-input">
+                                            <input type="text" placeholder="Full Name *" name="name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-input">
+                                            <input type="text" placeholder="Designation *" name="designation" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-input">
+                                            <input type="text" placeholder="Company Name *" name="firm_name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-input">
+                                            <input type="number" placeholder="Mobile Number *" name="mobile" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-input">
+                                            <input type="email" placeholder="Email Address *" name="email" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-input">
+                                            <input type="text" placeholder="Full Address *" name="address" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-input">
+                                            <input type="number" placeholder="Pincode *" name="pincode" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-input">
+                                            <input type="text" placeholder="City *" name="city" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-input">
+                                            <input type="text" placeholder="State *" name="state" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-input">
+                                            <input type="text" placeholder="Country *" name="country" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="submit-btn" id="ex-submit-btn">Register as Exhibitor</button>
+                                <button type="button" class="submit-btn" id="ex-loading-btn" style="display:none;" disabled>
+                                    <i class="fa fa-spinner fa-spin"></i> Submitting...
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="foot-fl">
+                <div class="foot-lft">
+                    <div class="foot-logo">
+                        <a href="index.html"><img src="./assets/logo/logoblc.png" alt="Masters Logo"></a>
+                        <p>Powering the World's Clean Energy Future</p>
+                        <a href="https://solarmasters.org/" target="_blank"><h3>Masters Association</h3></a>
+                    </div>
+                </div>
+                <div class="foot-rgt">
+                    <div class="foot-lst">
+                        <h3>Connect With Us</h3>
+                        <ul>
+                            <div class="cnt-cont-flx">
+                                <div class="cnt-rnd-bx"><i class="fa-solid fa-location-dot"></i></div>
+                                <a href="https://maps.app.goo.gl/6JspoZZUVwn796Gc6" target="_blank">
+                                    <div><p class="fr-fd">Our Location</p><p>Puthiyakavu Ground, Thripunithura, Ernakulam</p></div>
+                                </a>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('exhibitorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn  = document.getElementById('ex-submit-btn');
+            const loadingBtn = document.getElementById('ex-loading-btn');
+            submitBtn.style.display  = 'none';
+            loadingBtn.style.display = 'block';
+
+            const formData = new FormData(this);
+            formData.append('company_id',    '12');
+            formData.append('exhibition_id', '20');
+
+            fetch('https://event.rowbest.in/api/master-visitor-reg', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status) {
+                    alert('✅ Exhibitor registration successful! We will contact you soon.');
+                    document.getElementById('exhibitorForm').reset();
+                } else {
+                    alert(data.message || data.msg || 'Registration failed. Please check your inputs.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Network error. Please check your connection and try again.');
+            })
+            .finally(() => {
+                submitBtn.style.display  = 'block';
+                loadingBtn.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pre-register now for Masters Kerala RE 2.0 EXPO26 — Kerala's Premier Renewable Energy Exhibition. Sep 25–27, 2026 at Lulu Mall, Trivandrum.">
+    <meta property="og:title" content="Pre-Register | Masters Kerala RE 2.0 EXPO26">
+    <meta property="og:description" content="Secure your spot at Kerala's largest renewable energy expo. Pre-register today and get early access benefits.">
+    <title>Pre-Register | Masters Kerala RE 2.0 EXPO26</title>
+
+    <link rel="icon" type="image/png" href="./assets/logo/favic.png">
+    <link rel="stylesheet" href="./style-css/main.css">
+    <link rel="stylesheet" href="./style-css/mscol.css">
+    <link rel="stylesheet" href="./style-css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green:   #039623;
+            --green2:  #22c55e;
+            --yellow:  #f5c800;
+            --dark:    #0d1117;
+            --dark2:   #111827;
+            --card-bg: rgba(255,255,255,0.04);
+            --border:  rgba(255,255,255,0.10);
+            --text-muted: rgba(255,255,255,0.55);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--dark);
+            color: #fff;
+            font-family: 'Inter', 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .pr-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(3,150,35,0.22) 0%, transparent 70%),
+                        radial-gradient(ellipse 50% 40% at 90% 80%,  rgba(245,200,0,0.10) 0%, transparent 60%),
+                        var(--dark);
+        }
+
+        .pr-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .pr-header {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 40px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(13,17,23,0.75);
+        }
+
+        .pr-header .logos { display: flex; align-items: center; gap: 18px; }
+        .pr-header .logos img { height: 42px; object-fit: contain; }
+
+        .pr-header .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+        .pr-header .back-btn:hover { color: #fff; border-color: var(--green); background: rgba(3,150,35,0.12); }
+
+        .pr-main {
+            position: relative;
+            z-index: 1;
+            min-height: calc(100vh - 80px);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .pr-left {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid var(--border);
+        }
+
+        .pr-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(3,150,35,0.15);
+            border: 1px solid rgba(3,150,35,0.35);
+            color: var(--green2);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: 28px;
+            width: fit-content;
+        }
+
+        .pr-badge .dot {
+            width: 7px; height: 7px;
+            background: var(--green2);
+            border-radius: 50%;
+            animation: pulse-dot 1.8s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        .pr-left h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .pr-left h1 span {
+            background: linear-gradient(135deg, var(--green2), var(--yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pr-sub {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 440px;
+            margin-bottom: 36px;
+        }
+
+        .pr-info-pills { display: flex; flex-direction: column; gap: 14px; margin-bottom: 44px; }
+
+        .pr-pill {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 20px;
+            transition: border-color 0.3s ease;
+        }
+        .pr-pill:hover { border-color: rgba(3,150,35,0.4); }
+
+        .pr-pill-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: rgba(3,150,35,0.15);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--green2);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .pr-pill-text strong { display: block; font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .pr-pill-text span { font-size: 12px; color: var(--text-muted); }
+
+        .pr-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .pr-benefit {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .pr-benefit i { color: var(--green2); font-size: 13px; }
+
+        .pr-right {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .pr-form-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pr-form-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 10%; right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--green), var(--yellow), var(--green), transparent);
+            border-radius: 100px;
+        }
+
+        .pr-form-title { font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+        .pr-form-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
+
+        .pr-field { margin-bottom: 18px; }
+
+        .pr-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .pr-field input,
+        .pr-field select {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 13px 16px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.25s ease, background 0.25s ease;
+            appearance: none;
+        }
+
+        .pr-field input::placeholder { color: rgba(255,255,255,0.25); }
+        .pr-field input:focus, .pr-field select:focus {
+            border-color: var(--green);
+            background: rgba(3,150,35,0.08);
+        }
+        .pr-field select option { background: #1a2233; color: #fff; }
+
+        .pr-field-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; }
+
+        .day-selector { display: flex; gap: 8px; margin-bottom: 18px; }
+
+        .day-btn {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+        .day-btn strong { display: block; font-size: 18px; color: #fff; margin-bottom: 2px; }
+        .day-btn:hover { border-color: rgba(3,150,35,0.5); color: #fff; }
+        .day-btn.active { background: rgba(3,150,35,0.18); border-color: var(--green); color: var(--green2); }
+        .day-btn.active strong { color: var(--green2); }
+
+        .pr-submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--green), #016b18);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 15px 24px;
+            font-size: 15px;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(3,150,35,0.35);
+            margin-top: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        .pr-submit-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.12));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .pr-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(3,150,35,0.5); }
+        .pr-submit-btn:hover::after { opacity: 1; }
+        .pr-submit-btn:active { transform: translateY(0); }
+
+        #pr-success {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(13,17,23,0.95);
+            backdrop-filter: blur(16px);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 40px;
+        }
+        #pr-success.show { display: flex; animation: fadeInScale 0.5s ease forwards; }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .success-icon {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: rgba(3,150,35,0.15);
+            border: 2px solid var(--green);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            color: var(--green2);
+            margin-bottom: 28px;
+            animation: success-pop 0.6s cubic-bezier(.36,.07,.19,.97) 0.2s both;
+        }
+
+        @keyframes success-pop {
+            0%   { transform: scale(0); }
+            60%  { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .success-title { font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+        .success-sub { font-size: 15px; color: var(--text-muted); max-width: 420px; line-height: 1.7; margin-bottom: 32px; }
+
+        .success-back-btn {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 10px 24px;
+            border-radius: 100px;
+            transition: all 0.3s;
+        }
+        .success-back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+        .pr-error { font-size: 12px; color: #f87171; margin-top: 5px; display: none; }
+        .pr-field.error input, .pr-field.error select { border-color: #f87171; }
+        .pr-field.error .pr-error { display: block; }
+
+        .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--green2);
+            opacity: 0;
+            animation: float-up linear infinite;
+        }
+
+        @keyframes float-up {
+            0%   { opacity: 0; transform: translateY(0) scale(0); }
+            10%  { opacity: 0.4; }
+            90%  { opacity: 0.2; }
+            100% { opacity: 0; transform: translateY(-120vh) scale(1.5); }
+        }
+
+        @media (max-width: 900px) {
+            .pr-main { grid-template-columns: 1fr; }
+            .pr-left { border-right: none; border-bottom: 1px solid var(--border); padding: 40px 24px 32px; }
+            .pr-right { padding: 32px 24px 48px; }
+            .pr-form-card { padding: 28px 22px; }
+            .pr-benefits { grid-template-columns: 1fr; }
+            .pr-header { padding: 14px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .day-selector { flex-wrap: wrap; }
+            .day-btn { min-width: calc(33% - 8px); flex: none; }
+            .pr-field-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="pr-bg"></div>
+<div class="particles" id="particles"></div>
+
+<!-- HEADER -->
+<header class="pr-header">
+    <div class="logos">
+        <a href="index.html"><img src="./assets/logo/logo3.png" alt="Masters Expo Logo"></a>
+        <img src="./assets/logo/1.png" alt="Partner Logo">
+    </div>
+    <a href="index.html" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Back to Home
+    </a>
+</header>
+
+<!-- SUCCESS OVERLAY -->
+<div id="pr-success" role="dialog" aria-modal="true" aria-label="Registration Successful">
+    <div class="success-icon">&#10003;</div>
+    <h2 class="success-title">You're Pre-Registered! &#127881;</h2>
+    <p class="success-sub">
+        Thank you, <strong id="success-name"></strong>! Your spot at
+        <strong>Masters Kerala RE 2.0 EXPO26</strong> is secured.
+    </p>
+    <a href="index.html" class="success-back-btn">&#8592; Back to Main Site</a>
+</div>
+
+<!-- MAIN -->
+<main class="pr-main">
+
+    <!-- LEFT PANEL -->
+    <div class="pr-left">
+  
+
+        <h1>Secure Your Spot at <span>Kerala's Biggest Energy Expo</span></h1>
+
+        <p class="pr-sub">
+            Masters Kerala RE 2.0 EXPO26 brings together 700+ MNRE-registered vendors,
+            industry leaders, and innovators under one roof. Pre-register now for priority
+            entry and exclusive early-access benefits.
+        </p>
+
+        <div class="pr-info-pills">
+            <div class="pr-pill">
+                <div class="pr-pill-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                <div class="pr-pill-text">
+                    <strong>September 25 &ndash; 27, 2026</strong>
+                    <span>Friday &middot; Saturday &middot; Sunday &mdash; 3 Days</span>
+                </div>
+            </div>
+            <div class="pr-pill">
+                <div class="pr-pill-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="pr-pill-text">
+                    <strong>Lulu Mall, Trivandrum</strong>
+                    <span>Thiruvananthapuram, Kerala, India</span>
+                </div>
+            </div>
+            <div class="pr-pill">
+                <div class="pr-pill-icon"><i class="fa-solid fa-clock"></i></div>
+                <div class="pr-pill-text">
+                    <strong>10:00 AM &ndash; 7:00 PM</strong>
+                    <span>All three days &middot; Free entry for visitors</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pr-benefits">
+            <div class="pr-benefit"><i class="fa-solid fa-circle-check"></i> Priority Entry</div>
+            <div class="pr-benefit"><i class="fa-solid fa-circle-check"></i> Free Visitor Badge</div>
+            <div class="pr-benefit"><i class="fa-solid fa-circle-check"></i> Exhibitor Directory</div>
+            <div class="pr-benefit"><i class="fa-solid fa-circle-check"></i> WhatsApp Updates</div>
+            <div class="pr-benefit"><i class="fa-solid fa-circle-check"></i> Meet 700+ Vendors</div>
+            <div class="pr-benefit"><i class="fa-solid fa-circle-check"></i> Explore EV, Solar &amp; BESS</div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL — FORM -->
+    <div class="pr-right">
+        <div class="pr-form-card">
+            <h2 class="pr-form-title">Pre-Register Now</h2>
+            <p class="pr-form-subtitle">Fill in the details below &mdash; takes less than a minute.</p>
+
+            <form id="preRegForm" novalidate>
+
+                <div class="pr-field" id="field-name">
+                    <label for="pr-name">Full Name</label>
+                    <input type="text" id="pr-name" name="name" placeholder="Your full name" autocomplete="name">
+                    <span class="pr-error">Please enter your full name.</span>
+                </div>
+
+                <div class="pr-field" id="field-mobile">
+                    <label for="pr-mobile">Mobile Number</label>
+                    <div class="pr-field-row">
+                        <select id="pr-code" name="countryCode">
+                            <option value="91" selected>India (+91)</option>
+                            <option value="971">UAE (+971)</option>
+                            <option value="60">Malaysia (+60)</option>
+                            <option value="62">Indonesia (+62)</option>
+                            <option value="61">Australia (+61)</option>
+                            <option value="1">Canada / USA (+1)</option>
+                            <option value="49">Germany (+49)</option>
+                            <option value="65">Singapore (+65)</option>
+                            <option value="44">UK (+44)</option>
+                            <option value="966">Saudi Arabia (+966)</option>
+                            <option value="974">Qatar (+974)</option>
+                        </select>
+                        <input type="tel" id="pr-mobile" name="mobile" placeholder="10-digit number" maxlength="15" autocomplete="tel">
+                    </div>
+                    <span class="pr-error" id="mobile-error">Please enter a valid mobile number.</span>
+                </div>
+
+                <div class="pr-field" id="field-email">
+                    <label for="pr-email">Email Address</label>
+                    <input type="email" id="pr-email" name="email" placeholder="you@example.com" autocomplete="email">
+                    <span class="pr-error">Please enter a valid email address.</span>
+                </div>
+
+                <div class="pr-field" id="field-city">
+                    <label for="pr-city">City / District</label>
+                    <input type="text" id="pr-city" name="city" placeholder="e.g. Trivandrum, Ernakulam..." list="city-list" autocomplete="off">
+                    <datalist id="city-list">
+                        <option value="Trivandrum (TVM)">
+                        <option value="Kollam">
+                        <option value="Pathanamthitta">
+                        <option value="Alappuzha">
+                        <option value="Kottayam">
+                        <option value="Idukki">
+                        <option value="Ernakulam">
+                        <option value="Thrissur">
+                        <option value="Palakkad">
+                        <option value="Malappuram">
+                        <option value="Kozhikode">
+                        <option value="Wayanad">
+                        <option value="Kannur">
+                        <option value="Kasaragod">
+                    </datalist>
+                    <span class="pr-error">Please enter your city or district.</span>
+                </div>
+
+                <div class="pr-field" id="field-category">
+                    <label for="pr-category">I Am A&hellip;</label>
+                    <select id="pr-category" name="category">
+                        <option value="" disabled selected>Select your category</option>
+                        <option value="General Visitor">General Visitor</option>
+                        <option value="Industry Professional">Industry Professional</option>
+                        <option value="Vendor / Distributor">Vendor / Distributor</option>
+                        <option value="Installer / Contractor">Installer / Contractor</option>
+                        <option value="Student / Researcher">Student / Researcher</option>
+                        <option value="Government Official">Government Official</option>
+                        <option value="Media / Press">Media / Press</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span class="pr-error">Please select a category.</span>
+                </div>
+
+                <div class="pr-field" id="field-days">
+                    <label>Which Day(s) Will You Attend?</label>
+                    <div class="day-selector">
+                        <button type="button" class="day-btn" data-day="Sep 25">
+                            <strong>25</strong>Sep &mdash; Fri
+                        </button>
+                        <button type="button" class="day-btn" data-day="Sep 26">
+                            <strong>26</strong>Sep &mdash; Sat
+                        </button>
+                        <button type="button" class="day-btn" data-day="Sep 27">
+                            <strong>27</strong>Sep &mdash; Sun
+                        </button>
+                    </div>
+                    <span class="pr-error" id="day-error">Please select at least one day.</span>
+                </div>
+
+                <button type="submit" class="pr-submit-btn" id="pr-submit">
+                    <i class="fa-solid fa-bolt"></i>
+                    Confirm Pre-Registration
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<script>
+(function () {
+
+    var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyxmORUXGpQdGKawYMQULDvdvziQS4_K2tXINcVS1F7DuO9TBvQ6tIDVeHPDc-3dMou/exec';
+
+    /* === DAY SELECTOR === */
+    var selectedDays = [];
+
+    document.querySelectorAll('.day-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var day = this.dataset.day;
+            var idx = selectedDays.indexOf(day);
+            if (idx > -1) {
+                selectedDays.splice(idx, 1);
+                this.classList.remove('active');
+            } else {
+                selectedDays.push(day);
+                this.classList.add('active');
+            }
+        });
+    });
+
+    /* === FORM VALIDATION === */
+    var form = document.getElementById('preRegForm');
+
+    function showError(fieldId) {
+        var el = document.getElementById(fieldId);
+        if (el) el.closest('.pr-field').classList.add('error');
+    }
+    function clearError(fieldId) {
+        var el = document.getElementById(fieldId);
+        if (el) el.closest('.pr-field').classList.remove('error');
+    }
+
+    function resetSubmitButton() {
+        var btn = document.getElementById('pr-submit');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Confirm Pre-Registration';
+    }
+
+    function showSuccess(name) {
+        document.getElementById('success-name').textContent = name;
+        var overlay = document.getElementById('pr-success');
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function submitToGoogleSheet(data) {
+        if (!GOOGLE_SHEET_WEB_APP_URL) {
+            return Promise.resolve();
+        }
+
+        return fetch(GOOGLE_SHEET_WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams(data).toString()
+        });
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var valid = true;
+
+        var name = document.getElementById('pr-name').value.trim();
+        if (!name) { showError('pr-name'); valid = false; } else { clearError('pr-name'); }
+
+        var countryCode = document.getElementById('pr-code').value;
+        var mobile = document.getElementById('pr-mobile').value.trim();
+        if (!mobile || !/^\d{7,15}$/.test(mobile)) { showError('pr-mobile'); valid = false; } else { clearError('pr-mobile'); }
+
+        var email = document.getElementById('pr-email').value.trim();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('pr-email'); valid = false; } else { clearError('pr-email'); }
+
+        var city = document.getElementById('pr-city').value.trim();
+        if (!city) { showError('pr-city'); valid = false; } else { clearError('pr-city'); }
+
+        var cat = document.getElementById('pr-category').value;
+        if (!cat) { showError('pr-category'); valid = false; } else { clearError('pr-category'); }
+
+        var dayErrEl = document.getElementById('day-error');
+        if (selectedDays.length === 0) {
+            document.getElementById('field-days').classList.add('error');
+            dayErrEl.style.display = 'block';
+            valid = false;
+        } else {
+            document.getElementById('field-days').classList.remove('error');
+            dayErrEl.style.display = 'none';
+        }
+
+        if (!valid) return;
+
+        var btn = document.getElementById('pr-submit');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+        var registrationData = {
+            timestamp: new Date().toISOString(),
+            name: name,
+            mobile: mobile,
+            email: email,
+            city: city,
+            category: cat,
+            days: selectedDays.join(', '),
+        };
+
+        submitToGoogleSheet(registrationData)
+            .then(function() {
+                showSuccess(name);
+                form.reset();
+                selectedDays = [];
+                document.querySelectorAll('.day-btn.active').forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+            })
+            .catch(function() {
+                alert('Sorry, registration could not be submitted. Please try again.');
+                resetSubmitButton();
+            });
+    });
+
+    /* === FLOATING PARTICLES === */
+    var container = document.getElementById('particles');
+    for (var i = 0; i < 18; i++) {
+        var p    = document.createElement('div');
+        p.className = 'particle';
+        var size  = Math.random() * 5 + 2;
+        var left  = Math.random() * 100;
+        var delay = Math.random() * 18;
+        var dur   = Math.random() * 12 + 10;
+        var isYellow = Math.random() > 0.5;
+        p.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + left + '%;bottom:-10px;' +
+            'animation-duration:' + dur + 's;animation-delay:' + delay + 's;opacity:0;' +
+            'background:' + (isYellow ? '#f5c800' : '#22c55e') + ';';
+        container.appendChild(p);
+    }
+
+})();
+</script>
+
+</body>
+</html>

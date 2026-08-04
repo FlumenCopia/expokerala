@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Badge - Masters Expo 2026</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f8;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .badge-actions {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #79C143, #5a9e30);
+            color: #fff;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(121,193,67,0.35);
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-print:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(121,193,67,0.45); }
+
+        .badge-wrap {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border: 2px solid #e0e7ef;
+        }
+
+        .badge-header {
+            background: linear-gradient(135deg, #79C143, #5a9e30);
+            color: #fff;
+            padding: 16px;
+            text-align: center;
+        }
+        .badge-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .badge-header p {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .badge-logo {
+            text-align: center;
+            padding: 20px 20px 10px;
+        }
+        .badge-logo img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .badge-body { padding: 16px 24px; }
+
+        .badge-table { width: 100%; border-collapse: collapse; }
+        .badge-table tr td {
+            padding: 7px 4px;
+            font-size: 14px;
+            vertical-align: top;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .badge-table tr:last-child td { border-bottom: none; }
+        .badge-table .label {
+            color: #666;
+            font-weight: 500;
+            width: 38%;
+            white-space: nowrap;
+        }
+        .badge-table .colon { color: #999; padding: 7px 6px; }
+        .badge-table .value { color: #222; font-weight: 600; }
+
+        .badge-id-row {
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin-top: 4px;
+        }
+        .badge-id-row td { border-bottom: none !important; }
+
+        .badge-qr {
+            text-align: center;
+            padding: 16px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+        }
+        .badge-qr img {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #e0e7ef;
+            border-radius: 8px;
+        }
+        .badge-qr p {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .badge-footer {
+            background: #243546;
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+            font-size: 12px;
+        }
+        .badge-footer strong { color: #79C143; }
+
+        .badge-note {
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+            padding: 10px 20px;
+            border-top: 1px solid #eee;
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .badge-actions { display: none !important; }
+            .badge-wrap { box-shadow: none; border: 1px solid #ccc; border-radius: 0; max-width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Print Button (hidden on print) -->
+    <div class="badge-actions">
+        <button class="btn-print" onclick="window.print()">
+            🖨️ Print / Save as PDF
+        </button>
+    </div>
+
+    <!-- BADGE CARD -->
+    <div class="badge-wrap">
+        <!-- Header -->
+        <div class="badge-header">
+            <h2>Visitors</h2>
+            <p>Masters Kerala RE Expo 2026</p>
+        </div>
+
+        <!-- Logo -->
+        <div class="badge-logo">
+            <img src="./assets/logo/logoblc.png" alt="Masters Expo Logo">
+        </div>
+
+        <!-- Details -->
+        <div class="badge-body">
+            <table class="badge-table">
+                <tr>
+                    <td class="label">Name</td>
+                    <td class="colon">:</td>
+                    <td class="value" id="v-name">-</td>
+                </tr>
+                <tr>
+                    <td class="label">Profile</td>
+                    <td class="colon">:</td>
+                    <td class="value" id="v-profile">-</td>
+                </tr>
+                <tr>
+                    <td class="label">Designation</td>
+                    <td class="colon">:</td>
+                    <td class="value" id="v-designation">-</td>
+                </tr>
+                <tr>
+                    <td class="label">Company</td>
+                    <td class="colon">:</td>
+                    <td class="value" id="v-company">-</td>
+                </tr>
+                <tr>
+                    <td class="label">City</td>
+                    <td class="colon">:</td>
+                    <td class="value" id="v-city">-</td>
+                </tr>
+                <tr class="badge-id-row">
+                    <td class="label">Badge ID</td>
+                    <td class="colon">:</td>
+                    <td class="value" id="v-badge-id" style="color:#79C143;font-size:15px;">-</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- QR Code -->
+        <div class="badge-qr">
+            <img id="qr-img" src="" alt="QR Code for entry">
+            <p>Scan QR code at the entrance</p>
+        </div>
+
+        <!-- Note -->
+        <div class="badge-note">
+            Show this badge at the entrance of the exhibition
+        </div>
+
+        <!-- Footer -->
+        <div class="badge-footer">
+            <strong>Jan 9–11, 2026</strong> | Puthiyakavu Ground, Thripunithura, Ernakulam
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const params  = new URLSearchParams(window.location.search);
+            const qrId    = params.get('qr_id')   || '0';
+            const badgeNo = params.get('badge_no') || '1';
+            const vStr    = params.get('visitor');
+
+            let visitor = {};
+            if (vStr) {
+                try { visitor = JSON.parse(decodeURIComponent(vStr)); }
+                catch(e) { console.warn('Could not parse visitor data', e); }
+            }
+
+            document.getElementById('v-name').textContent        = visitor.name         || '-';
+            document.getElementById('v-profile').textContent     = visitor.profile      || '-';
+            document.getElementById('v-designation').textContent = visitor.designation  || '-';
+            document.getElementById('v-company').textContent     = visitor.company_name || '-';
+            document.getElementById('v-city').textContent        = visitor.city         || '-';
+            document.getElementById('v-badge-id').textContent    = 'ReExpo2026/' + String(badgeNo).padStart(4, '0');
+
+            // Generate QR via free QRServer API (no library needed)
+            const entryUrl = 'https://event.rowbest.in/register/' + qrId;
+            const qrUrl    = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(entryUrl);
+            document.getElementById('qr-img').src = qrUrl;
+        })();
+    </script>
+</body>
+</html>
