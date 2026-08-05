@@ -274,6 +274,7 @@
             transition: all 0.25s ease;
         }
         .day-btn strong { display: block; font-size: 18px; color: #fff; margin-bottom: 2px; }
+        .day-btn * { pointer-events: none; }
         .day-btn:hover { border-color: rgba(3,150,35,0.5); color: #fff; }
         .day-btn.active { background: rgba(3,150,35,0.18); border-color: var(--green); color: var(--green2); }
         .day-btn.active strong { color: var(--green2); }
@@ -676,19 +677,39 @@
     /* === DAY SELECTOR === */
     var selectedDays = [];
 
-    document.querySelectorAll('.day-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var day = this.dataset.day;
-            var idx = selectedDays.indexOf(day);
-            if (idx > -1) {
-                selectedDays.splice(idx, 1);
-                this.classList.remove('active');
-            } else {
-                selectedDays.push(day);
-                this.classList.add('active');
-            }
+    function initDaySelector() {
+        document.querySelectorAll('.day-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var day = this.getAttribute('data-day') || (this.dataset ? this.dataset.day : '');
+                if (!day) return;
+                
+                var idx = selectedDays.indexOf(day);
+                if (idx > -1) {
+                    selectedDays.splice(idx, 1);
+                    this.classList.remove('active');
+                } else {
+                    selectedDays.push(day);
+                    this.classList.add('active');
+                }
+                console.log('🗓️ [Day Selector] Toggled day:', day, '| Currently selected:', selectedDays);
+
+                if (selectedDays.length > 0) {
+                    var fieldDays = document.getElementById('field-days');
+                    var dayError = document.getElementById('day-error');
+                    if (fieldDays) fieldDays.classList.remove('error');
+                    if (dayError) dayError.style.display = 'none';
+                }
+            });
         });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDaySelector);
+    } else {
+        initDaySelector();
+    }
 
     /* === FORM VALIDATION === */
     var form = document.getElementById('preRegForm');
