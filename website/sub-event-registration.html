@@ -256,8 +256,11 @@
             formData.append('company_id',    '12');
             formData.append('exhibition_id', '20');
 
+            console.log('🚀 [Sub-Event Register] Submitting sub-event registration form:', Object.fromEntries(formData.entries()));
+
             // Save to Supabase
             if (window.expoSupabase) {
+                console.log('💾 [Supabase Sub-Event] Inserting row into sub_event_registrations table...');
                 Promise.resolve(
                     window.expoSupabase
                         .from('sub_event_registrations')
@@ -275,7 +278,9 @@
                             state: formData.get('state'),
                             pincode: formData.get('pincode')
                         }])
-                ).catch(err => console.error('Supabase SubEvent error:', err));
+                )
+                .then(res => console.log('✅ [Supabase Sub-Event] Record saved:', res))
+                .catch(err => console.warn('⚠️ [Supabase Sub-Event Notice]:', err));
             }
 
             fetch('https://event.rowbest.in/api/sub-event-visitor-reg', {

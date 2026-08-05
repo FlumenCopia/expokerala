@@ -799,8 +799,12 @@
     }
 
     function saveToSupabase(data) {
-        if (!window.expoSupabase) return Promise.resolve();
+        if (!window.expoSupabase) {
+            console.warn('⚠️ [Pre-Register] Supabase client not loaded, skipping DB insert.');
+            return Promise.resolve();
+        }
         try {
+            console.log('💾 [Supabase Pre-Register] Inserting row into pre_registrations table:', data);
             return Promise.resolve(
                 window.expoSupabase
                     .from('pre_registrations')
@@ -813,10 +817,18 @@
                         category: data.category,
                         days: data.days
                     }])
-            ).catch(function(err) {
-                console.warn('Supabase notice:', err ? (err.message || err) : 'Offline/Network fallback');
+            ).then(function(res) {
+                if (res && res.error) {
+                    console.warn('⚠️ [Supabase Pre-Register] Insert returned error:', res.error);
+                } else {
+                    console.log('✅ [Supabase Pre-Register] Record saved successfully:', res);
+                }
+                return res;
+            }).catch(function(err) {
+                console.warn('⚠️ [Supabase Pre-Register] Insert notice:', err ? (err.message || err) : 'Offline fallback');
             });
         } catch (e) {
+            console.error('❌ [Supabase Pre-Register] Unexpected error:', e);
             return Promise.resolve();
         }
     }
@@ -851,7 +863,10 @@
             dayErrEl.style.display = 'none';
         }
 
-        if (!valid) return;
+        if (!valid) {
+            console.warn('⚠️ [Pre-Register] Form validation failed. Please check required fields.');
+            return;
+        }
 
         var btn = document.getElementById('pr-submit');
         btn.disabled = true;
@@ -868,12 +883,15 @@
             days: selectedDays.join(', '),
         };
 
-        // Save to Supabase and submit to Google Sheet
-        saveToSupabase(registrationData)
-            .catch(function(err) { console.error('Supabase error:', err); });
+        console.log('🚀 [Pre-Register] Form submitted with data:', registrationData);
 
+        // Save to Supabase and submit to Google Sheet
+        saveToSupabase(registrationData);
+
+        console.log('📊 [Google Sheet] Submitting data to Apps Script Web App:', GOOGLE_SHEET_WEB_APP_URL);
         submitToGoogleSheet(registrationData)
             .then(function() {
+                console.log('🎉 [Pre-Register] Registration completed successfully for:', name);
                 showSuccess(name, email, selectedDays);
                 form.reset();
                 selectedDays = [];
@@ -881,8 +899,10 @@
                     btn.classList.remove('active');
                 });
             })
-            .catch(function() {
+            .catch(function(err) {
+                console.error('❌ [Google Sheet Error]:', err);
                 alert('Sorry, registration could not be submitted. Please try again.');
+            })
                 resetSubmitButton();
             });
     });

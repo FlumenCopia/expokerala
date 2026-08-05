@@ -28,9 +28,12 @@
 
                 // Admin Client using publishable key (with RLS enabled policies)
                 window.expoSupabaseAdmin = window.expoSupabase;
+                console.info('⚡ [Supabase Config] Client successfully initialized for:', SUPABASE_URL);
             } catch (err) {
-                console.warn('Supabase init notice:', err);
+                console.warn('⚠️ [Supabase Config] Init warning:', err);
             }
+        } else {
+            console.warn('⚠️ [Supabase Config] Supabase SDK script not loaded yet.');
         }
     }
 

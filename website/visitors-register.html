@@ -287,8 +287,11 @@
             formData.append('company_id',    '12');
             formData.append('exhibition_id', '20');
 
+            console.log('🚀 [Visitor Register] Submitting visitor registration form:', Object.fromEntries(formData.entries()));
+
             // Save to Supabase
             if (window.expoSupabase) {
+                console.log('💾 [Supabase Visitor] Inserting row into visitor_registrations table...');
                 Promise.resolve(
                     window.expoSupabase
                         .from('visitor_registrations')
@@ -307,7 +310,9 @@
                             pincode: formData.get('pincode'),
                             landmark: formData.get('landmark')
                         }])
-                ).catch(err => console.error('Supabase Visitor error:', err));
+                )
+                .then(res => console.log('✅ [Supabase Visitor] Record saved:', res))
+                .catch(err => console.warn('⚠️ [Supabase Visitor Notice]:', err));
             }
 
             fetch('https://event.rowbest.in/api/master-visitor-reg', {

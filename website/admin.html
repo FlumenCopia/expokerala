@@ -521,42 +521,47 @@
         // SUPABASE DATA FETCHING
         function fetchAllData() {
             if (!window.expoSupabaseAdmin && !window.expoSupabase) {
-                console.warn('Supabase client not initialized');
+                console.warn('⚠️ [Admin Portal] Supabase client not initialized');
                 return;
             }
+            console.log('🔄 [Admin Portal] Fetching live registration counts and table data...');
             var db = window.expoSupabaseAdmin || window.expoSupabase;
 
             Promise.resolve(db.from('pre_registrations').select('*').order('created_at', { ascending: false }))
                 .then(function(res) {
                     cachedData.pre = (res && res.data) ? res.data : [];
                     document.getElementById('stat-pre').textContent = cachedData.pre.length;
+                    console.log('📊 [Admin Portal] Pre-registrations loaded:', cachedData.pre.length);
                     if (currentTab === 'pre') renderTable();
                 })
-                .catch(function(err) { console.warn('Pre-reg fetch error:', err); });
+                .catch(function(err) { console.warn('⚠️ [Admin Portal] Pre-reg fetch error:', err); });
 
             Promise.resolve(db.from('visitor_registrations').select('*').order('created_at', { ascending: false }))
                 .then(function(res) {
                     cachedData.visitor = (res && res.data) ? res.data : [];
                     document.getElementById('stat-visitor').textContent = cachedData.visitor.length;
+                    console.log('📊 [Admin Portal] Visitor registrations loaded:', cachedData.visitor.length);
                     if (currentTab === 'visitor') renderTable();
                 })
-                .catch(function(err) { console.warn('Visitor fetch error:', err); });
+                .catch(function(err) { console.warn('⚠️ [Admin Portal] Visitor fetch error:', err); });
 
             Promise.resolve(db.from('exhibitor_registrations').select('*').order('created_at', { ascending: false }))
                 .then(function(res) {
                     cachedData.exhibitor = (res && res.data) ? res.data : [];
                     document.getElementById('stat-exhibitor').textContent = cachedData.exhibitor.length;
+                    console.log('📊 [Admin Portal] Exhibitor registrations loaded:', cachedData.exhibitor.length);
                     if (currentTab === 'exhibitor') renderTable();
                 })
-                .catch(function(err) { console.warn('Exhibitor fetch error:', err); });
+                .catch(function(err) { console.warn('⚠️ [Admin Portal] Exhibitor fetch error:', err); });
 
             Promise.resolve(db.from('sub_event_registrations').select('*').order('created_at', { ascending: false }))
                 .then(function(res) {
                     cachedData.sub = (res && res.data) ? res.data : [];
                     document.getElementById('stat-sub').textContent = cachedData.sub.length;
+                    console.log('📊 [Admin Portal] Sub-event registrations loaded:', cachedData.sub.length);
                     if (currentTab === 'sub') renderTable();
                 })
-                .catch(function(err) { console.warn('Sub-event fetch error:', err); });
+                .catch(function(err) { console.warn('⚠️ [Admin Portal] Sub-event fetch error:', err); });
         }
 
         function fetchActiveTab() { fetchAllData(); }
