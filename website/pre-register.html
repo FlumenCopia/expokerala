@@ -319,6 +319,7 @@
             flex-direction: column;
             text-align: center;
             padding: 40px;
+            overflow-y: auto;
         }
         #pr-success.show { display: flex; animation: fadeInScale 0.5s ease forwards; }
 
@@ -335,7 +336,7 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 40px;
             color: var(--green2);
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             animation: success-pop 0.6s cubic-bezier(.36,.07,.19,.97) 0.2s both;
         }
 
@@ -346,7 +347,76 @@
         }
 
         .success-title { font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 12px; }
-        .success-sub { font-size: 15px; color: var(--text-muted); max-width: 420px; line-height: 1.7; margin-bottom: 32px; }
+        .success-sub { font-size: 15px; color: var(--text-muted); max-width: 440px; line-height: 1.7; margin-bottom: 24px; }
+
+        .pr-email-notice {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(3,150,35,0.12);
+            border: 1px solid rgba(3,150,35,0.3);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: #e2e8f0;
+            font-size: 14px;
+            max-width: 480px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .pr-email-notice i { color: var(--green2); font-size: 18px; flex-shrink: 0; }
+
+        .gcal-actions {
+            max-width: 480px;
+            width: 100%;
+            margin-bottom: 28px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .gcal-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gcal-title i { color: var(--yellow); }
+
+        .gcal-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .gcal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(66,133,244,0.15), rgba(52,168,83,0.15));
+            border: 1px solid rgba(66,133,244,0.35);
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .gcal-btn:hover {
+            background: linear-gradient(135deg, rgba(66,133,244,0.28), rgba(52,168,83,0.28));
+            border-color: #4285f4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(66,133,244,0.25);
+            color: #fff;
+        }
+        .gcal-btn i.fa-google { color: #4285f4; font-size: 16px; }
+        .gcal-btn i.fa-arrow-up-right-from-square { font-size: 12px; opacity: 0.7; }
 
         .success-back-btn {
             color: var(--text-muted);
@@ -421,6 +491,19 @@
         Thank you, <strong id="success-name"></strong>! Your spot at
         <strong>Masters Kerala RE 2.0 EXPO26</strong> is secured.
     </p>
+
+    <!-- EMAIL REMINDER NOTIFICATION -->
+    <div class="pr-email-notice" id="pr-email-notice">
+        <i class="fa-solid fa-envelope-circle-check"></i>
+        <span>A reminder message and calendar details have been sent to <strong id="success-email"></strong></span>
+    </div>
+
+    <!-- GOOGLE CALENDAR BUTTONS CONTAINER -->
+    <div class="gcal-actions">
+        <p class="gcal-title"><i class="fa-solid fa-calendar-check"></i> Add to your Google Calendar:</p>
+        <div id="gcal-buttons-container" class="gcal-buttons-container"></div>
+    </div>
+
     <a href="index.html" class="success-back-btn">&#8592; Back to Main Site</a>
 </div>
 
@@ -429,7 +512,9 @@
 
     <!-- LEFT PANEL -->
     <div class="pr-left">
-  
+        <div class="pr-badge">
+            <span class="dot"></span> Pre-Registration Open
+        </div>
 
         <h1>Secure Your Spot at <span>Kerala's Biggest Energy Expo</span></h1>
 
@@ -619,8 +704,49 @@
         btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Confirm Pre-Registration';
     }
 
-    function showSuccess(name) {
+    function generateGCalLinks(days) {
+        var dateMap = {
+            'Sep 25': { start: '20260925T043000Z', end: '20260925T133000Z', label: 'Sep 25 (Friday)' },
+            'Sep 26': { start: '20260926T043000Z', end: '20260926T133000Z', label: 'Sep 26 (Saturday)' },
+            'Sep 27': { start: '20260927T043000Z', end: '20260927T133000Z', label: 'Sep 27 (Sunday)' }
+        };
+
+        var container = document.getElementById('gcal-buttons-container');
+        container.innerHTML = '';
+
+        days.forEach(function(day) {
+            var info = dateMap[day];
+            if (info) {
+                var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+                    '&text=' + encodeURIComponent('Masters Kerala RE 2.0 EXPO26 (' + day + ')') +
+                    '&dates=' + info.start + '/' + info.end +
+                    '&details=' + encodeURIComponent('Pre-registration reminder for Masters Kerala RE 2.0 EXPO26.\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
+                    '&location=' + encodeURIComponent('Lulu Mall, Thiruvananthapuram, Kerala, India');
+
+                var a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = 'gcal-btn';
+                a.innerHTML = '<span><i class="fa-brands fa-google"></i> Add ' + info.label + ' to Google Calendar</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                container.appendChild(a);
+            }
+        });
+    }
+
+    function showSuccess(name, email, days) {
         document.getElementById('success-name').textContent = name;
+
+        var emailNotice = document.getElementById('pr-email-notice');
+        if (email) {
+            document.getElementById('success-email').textContent = email;
+            emailNotice.style.display = 'flex';
+        } else {
+            emailNotice.style.display = 'none';
+        }
+
+        generateGCalLinks(days);
+
         var overlay = document.getElementById('pr-success');
         overlay.classList.add('show');
         document.body.style.overflow = 'hidden';
@@ -680,6 +806,7 @@
         var registrationData = {
             timestamp: new Date().toISOString(),
             name: name,
+            countryCode: countryCode,
             mobile: mobile,
             email: email,
             city: city,
@@ -689,7 +816,7 @@
 
         submitToGoogleSheet(registrationData)
             .then(function() {
-                showSuccess(name);
+                showSuccess(name, email, selectedDays);
                 form.reset();
                 selectedDays = [];
                 document.querySelectorAll('.day-btn.active').forEach(function(btn) {
