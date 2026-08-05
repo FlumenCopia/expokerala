@@ -645,13 +645,13 @@
                 <div class="pr-field" id="field-days">
                     <label>Which Day(s) Will You Attend?</label>
                     <div class="day-selector">
-                        <button type="button" class="day-btn" data-day="Sep 25">
+                        <button type="button" class="day-btn" data-day="Sep 25" onclick="toggleExpoDay(this, 'Sep 25')">
                             <strong>25</strong>Sep &mdash; Fri
                         </button>
-                        <button type="button" class="day-btn" data-day="Sep 26">
+                        <button type="button" class="day-btn" data-day="Sep 26" onclick="toggleExpoDay(this, 'Sep 26')">
                             <strong>26</strong>Sep &mdash; Sat
                         </button>
-                        <button type="button" class="day-btn" data-day="Sep 27">
+                        <button type="button" class="day-btn" data-day="Sep 27" onclick="toggleExpoDay(this, 'Sep 27')">
                             <strong>27</strong>Sep &mdash; Sun
                         </button>
                     </div>
@@ -675,41 +675,27 @@
     var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxsa3kVET2asmx9m54lvis5xLp0KLPW98xgAIiSR10eW6Vu5AVwdFbgxaVpahWhvIFc/exec';
 
     /* === DAY SELECTOR === */
-    var selectedDays = [];
+    window.selectedDays = [];
 
-    function initDaySelector() {
-        document.querySelectorAll('.day-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var day = this.getAttribute('data-day') || (this.dataset ? this.dataset.day : '');
-                if (!day) return;
-                
-                var idx = selectedDays.indexOf(day);
-                if (idx > -1) {
-                    selectedDays.splice(idx, 1);
-                    this.classList.remove('active');
-                } else {
-                    selectedDays.push(day);
-                    this.classList.add('active');
-                }
-                console.log('🗓️ [Day Selector] Toggled day:', day, '| Currently selected:', selectedDays);
+    window.toggleExpoDay = function(btn, day) {
+        if (!btn || !day) return;
+        var idx = window.selectedDays.indexOf(day);
+        if (idx > -1) {
+            window.selectedDays.splice(idx, 1);
+            btn.classList.remove('active');
+        } else {
+            window.selectedDays.push(day);
+            btn.classList.add('active');
+        }
+        console.log('🗓️ [Day Selector] Toggled day:', day, '| Currently selected:', window.selectedDays);
 
-                if (selectedDays.length > 0) {
-                    var fieldDays = document.getElementById('field-days');
-                    var dayError = document.getElementById('day-error');
-                    if (fieldDays) fieldDays.classList.remove('error');
-                    if (dayError) dayError.style.display = 'none';
-                }
-            });
-        });
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initDaySelector);
-    } else {
-        initDaySelector();
-    }
+        if (window.selectedDays.length > 0) {
+            var fieldDays = document.getElementById('field-days');
+            var dayError = document.getElementById('day-error');
+            if (fieldDays) fieldDays.classList.remove('error');
+            if (dayError) dayError.style.display = 'none';
+        }
+    };
 
     /* === FORM VALIDATION === */
     var form = document.getElementById('preRegForm');
@@ -875,7 +861,7 @@
         if (!cat) { showError('pr-category'); valid = false; } else { clearError('pr-category'); }
 
         var dayErrEl = document.getElementById('day-error');
-        if (selectedDays.length === 0) {
+        if (!window.selectedDays || window.selectedDays.length === 0) {
             document.getElementById('field-days').classList.add('error');
             dayErrEl.style.display = 'block';
             valid = false;
@@ -901,7 +887,7 @@
             email: email,
             city: city,
             category: cat,
-            days: selectedDays.join(', '),
+            days: window.selectedDays.join(', '),
         };
 
         console.log('🚀 [Pre-Register] Form submitted with data:', registrationData);
@@ -913,17 +899,17 @@
         submitToGoogleSheet(registrationData)
             .then(function() {
                 console.log('🎉 [Pre-Register] Registration completed successfully for:', name);
-                showSuccess(name, email, selectedDays);
+                showSuccess(name, email, window.selectedDays);
                 form.reset();
-                selectedDays = [];
+                window.selectedDays = [];
                 document.querySelectorAll('.day-btn.active').forEach(function(btn) {
                     btn.classList.remove('active');
                 });
+                resetSubmitButton();
             })
             .catch(function(err) {
                 console.error('❌ [Google Sheet Error]:', err);
                 alert('Sorry, registration could not be submitted. Please try again.');
-            })
                 resetSubmitButton();
             });
     });
