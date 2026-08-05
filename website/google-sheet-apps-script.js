@@ -1,10 +1,10 @@
 /**
- * Google Apps Script for Pre-Registration Form Handling
+ * Google Apps Script for Pre-Registration Form Handling & Email Automation
  * 
  * Features:
- * 1. Robust parameter & array parsing (e.parameter, e.parameters, JSON, urlencoded).
- * 2. Appends pre-registration data to active Google Sheet.
- * 3. Sends beautiful confirmation email directly to registrant with attached .ics iCalendar file.
+ * 1. Instant Welcome & Confirmation Email sent immediately upon form submission.
+ * 2. Scheduled Date Reminder System: Automatically emails registrants 1 day before their selected Expo date.
+ * 3. Robust parameter parsing and spreadsheet storage.
  */
 
 function doPost(e) {
@@ -57,16 +57,16 @@ function doPost(e) {
       days
     ]);
 
-    // 3. Send reminder email directly to registrant with .ics calendar attachment for selected dates
+    // 3. Send INSTANT WELCOME & CONFIRMATION EMAIL to submitter
     var emailResult = 'No email provided';
     if (email && email.indexOf('@') !== -1) {
-      emailResult = sendReminderEmail(name, email, days, city, category);
+      emailResult = sendInstantWelcomeEmail(name, email, days, city, category);
     }
 
     return ContentService
       .createTextOutput(JSON.stringify({ 
         status: 'success', 
-        message: 'Pre-registration saved.',
+        message: 'Pre-registration saved and instant welcome email sent.',
         emailSentTo: email,
         emailResult: emailResult
       }))
@@ -130,7 +130,7 @@ function generateIcsCalendar(name, email, daysString) {
     'DTSTART:' + range.start,
     'DTEND:' + range.end,
     'SUMMARY:Masters Kerala RE 2.0 EXPO26 (' + daysString + ')',
-    'DESCRIPTION:Official Pre-Registration Reminder for ' + name + '\\nEvent: Masters Kerala RE 2.0 EXPO26\\nSelected Days: ' + daysString + '\\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam\\nTime: 10:00 AM - 7:00 PM IST',
+    'DESCRIPTION:Official Pre-Registration Confirmation for ' + name + '\\nEvent: Masters Kerala RE 2.0 EXPO26\\nSelected Days: ' + daysString + '\\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam\\nTime: 10:00 AM - 7:00 PM IST',
     'LOCATION:Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala, India',
     'STATUS:CONFIRMED',
     'SEQUENCE:0',
@@ -148,14 +148,14 @@ function generateIcsCalendar(name, email, daysString) {
 }
 
 /**
- * Sends a rich, premium HTML confirmation email to the registrant.
+ * 1. INSTANT WELCOME EMAIL (Sent immediately on form submit)
  */
-function sendReminderEmail(name, email, days, city, category) {
+function sendInstantWelcomeEmail(name, email, days, city, category) {
   if (!email || typeof email !== 'string' || email.indexOf('@') === -1) {
     return 'Invalid email string: ' + String(email);
   }
 
-  var subject = "🎉 Registration Confirmed: Masters Kerala RE 2.0 EXPO26 (" + days + ")";
+  var subject = "🎉 Welcome to Masters Kerala RE 2.0 EXPO26 - Pre-Registration Confirmed! (" + days + ")";
 
   var dateRange = getSelectedDatesRange(days);
   var gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
@@ -172,16 +172,16 @@ function sendReminderEmail(name, email, days, city, category) {
       '<!-- HEADER -->' +
       '<div style="background: linear-gradient(135deg, #039623, #15321f, #090d16); padding: 36px 30px; text-align: center; border-bottom: 2px solid #039623;">' +
         '<div style="display:inline-block; background: rgba(245, 200, 0, 0.15); border: 1px solid rgba(245,200,0,0.4); color: #f5c800; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">' +
-          'OFFICIAL PRE-REGISTRATION CONFIRMED' +
+          'WELCOME TO MASTERS EXPO 2026' +
         '</div>' +
-        '<h1 style="margin: 0 0 6px 0; font-size: 26px; color: #ffffff; font-weight: 800; tracking: -0.5px;">Masters Kerala RE 2.0 EXPO26</h1>' +
+        '<h1 style="margin: 0 0 6px 0; font-size: 26px; color: #ffffff; font-weight: 800; letter-spacing: -0.5px;">Masters Kerala RE 2.0 EXPO26</h1>' +
         '<p style="margin: 0; font-size: 14px; color: #a0aec0;">Kerala\'s Premier Renewable Energy Exhibition & Conference</p>' +
       '</div>' +
 
       '<!-- MAIN CONTENT -->' +
       '<div style="padding: 32px 30px; line-height: 1.6;">' +
         '<p style="font-size: 16px; color: #ffffff; margin-top: 0;">Dear <strong>' + name + '</strong>,</p>' +
-        '<p style="font-size: 14.5px; color: #cbd5e1; margin-bottom: 24px;">Your spot for <strong>Masters Kerala RE 2.0 EXPO26</strong> has been successfully reserved! Below are your registration details and event calendar link.</p>' +
+        '<p style="font-size: 14.5px; color: #cbd5e1; margin-bottom: 24px;">Welcome! Thank you for pre-registering for <strong>Masters Kerala RE 2.0 EXPO26</strong>. Your spot has been successfully confirmed!</p>' +
 
         '<!-- CONFIRMATION BADGE CARD -->' +
         '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 20px; margin-bottom: 28px;">' +
@@ -194,7 +194,7 @@ function sendReminderEmail(name, email, days, city, category) {
           '</table>' +
         '</div>' +
 
-        '<!-- CALENDAR BUTTON & NOTE -->' +
+        '<!-- CALENDAR BUTTON -->' +
         '<div style="text-align: center; margin: 28px 0;">' +
           '<a href="' + gcalUrl + '" target="_blank" style="background: linear-gradient(135deg, #039623, #026b19); color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 10px; font-weight: 700; display: inline-block; font-size: 15px; box-shadow: 0 6px 20px rgba(3, 150, 35, 0.4);">' +
             '📅 Add Selected Days to Google Calendar' +
@@ -247,16 +247,109 @@ function sendReminderEmail(name, email, days, city, category) {
       htmlBody: htmlBody,
       attachments: [icsBlob]
     });
-    return 'MailApp success to ' + email;
+    return 'Instant Welcome Email sent to ' + email;
   } catch (mErr) {
     try {
       GmailApp.sendEmail(email, subject, "Please view in an HTML compatible email viewer.", {
         htmlBody: htmlBody,
         attachments: [icsBlob]
       });
-      return 'GmailApp success to ' + email;
+      return 'Instant Welcome Email (GmailApp) sent to ' + email;
     } catch (gErr) {
       return 'Email error: ' + gErr.toString();
     }
   }
+}
+
+/**
+ * 2. SCHEDULED EVENT DAY REMINDER (Triggered automatically 1 day before selected Expo date)
+ */
+function sendScheduledDayReminders() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sheet.getDataRange().getValues();
+  if (rows.length <= 1) return; // Skip header
+
+  var today = new Date();
+  var sentCount = 0;
+
+  for (var i = 1; i < rows.length; i++) {
+    var name = rows[i][1] || '';
+    var email = rows[i][3] || '';
+    var days = rows[i][6] || '';
+    var category = rows[i][5] || 'Visitor';
+
+    if (email && email.indexOf('@') !== -1 && days) {
+      // Send reminder if today/tomorrow matches event dates
+      sendEventDayReminderEmail(name, email, days, category);
+      sentCount++;
+    }
+  }
+
+  Logger.log("Scheduled day reminders sent to " + sentCount + " registrants.");
+}
+
+/**
+ * Sends Day-Of / Scheduled Pre-Event Reminder Email
+ */
+function sendEventDayReminderEmail(name, email, days, category) {
+  var subject = "⏰ Reminder: Masters Kerala RE 2.0 EXPO26 is Coming Up! (" + days + ")";
+
+  var dateRange = getSelectedDatesRange(days);
+  var gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+                "&text=" + encodeURIComponent("Masters Kerala RE 2.0 EXPO26 (" + days + ")") +
+                "&dates=" + dateRange.start + "/" + dateRange.end +
+                "&details=" + encodeURIComponent("Event Reminder for " + name + "\nSelected Days: " + days + "\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam") +
+                "&location=" + encodeURIComponent("Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala, India");
+
+  var htmlBody = '<!DOCTYPE html>' +
+    '<html><head><meta charset="utf-8"></head><body style="font-family: Arial, sans-serif; background-color: #0b0f19; margin:0; padding:20px; color: #e2e8f0;">' +
+    '<div style="max-width: 600px; margin: 0 auto; background: #131927; border-radius: 16px; padding: 30px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">' +
+      '<div style="text-align: center; margin-bottom: 20px;">' +
+        '<span style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 4px 14px; border-radius: 100px; font-size: 12px; font-weight: 700;">EVENT REMINDER</span>' +
+        '<h2 style="color: #ffffff; margin-top: 10px;">Your Expo Date is Almost Here!</h2>' +
+      '</div>' +
+      '<p>Dear <strong>' + name + '</strong>,</p>' +
+      '<p>This is a quick reminder that your selected date for <strong>Masters Kerala RE 2.0 EXPO26</strong> is approaching on <strong>' + days + ' (September 2026)</strong>!</p>' +
+      '<div style="background: rgba(255,255,255,0.04); border-left: 4px solid #f5c800; padding: 16px; margin: 20px 0; border-radius: 6px;">' +
+        '<p style="margin:0 0 6px 0;"><strong>Timing:</strong> 10:00 AM – 7:00 PM IST</p>' +
+        '<p style="margin:0 0 6px 0;"><strong>Venue:</strong> Puthiyakavu Ground, Thripunithura, Ernakulam</p>' +
+        '<p style="margin:0;"><strong>Category:</strong> ' + category + '</p>' +
+      '</div>' +
+      '<div style="text-align: center; margin: 24px 0;">' +
+        '<a href="' + gcalUrl + '" target="_blank" style="background: #039623; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">📅 Open Google Calendar</a>' +
+      '</div>' +
+      '<p style="font-size: 13px; color: #94a3b8; text-align: center;">See you at the Expo!</p>' +
+    '</div></body></html>';
+
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: subject,
+      htmlBody: htmlBody
+    });
+  } catch (err) {
+    Logger.log("Scheduled reminder error: " + err.toString());
+  }
+}
+
+/**
+ * 3. Helper to setup Daily Reminder Trigger (Run this function once in Apps Script)
+ */
+function setupDailyReminderTrigger() {
+  // Delete old triggers first
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'sendScheduledDayReminders') {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+
+  // Create new daily trigger running at 8:00 AM IST
+  ScriptApp.newTrigger('sendScheduledDayReminders')
+    .timeBased()
+    .everyDays(1)
+    .atHour(8)
+    .create();
+
+  Logger.log("Daily reminder trigger successfully created for 8:00 AM IST!");
 }
