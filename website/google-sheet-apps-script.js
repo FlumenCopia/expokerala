@@ -1,22 +1,28 @@
-/**
- * Google Apps Script for Pre-Registration Form Handling & Email Automation
+/******************************************************************************
+ * Masters Kerala RE 2.0 EXPO26 - Master Google Apps Script
  * 
  * Features:
- * 1. Instant Welcome & Confirmation Email sent immediately upon form submission.
- * 2. Scheduled Date Reminder System: Automatically emails registrants 1 day before their selected Expo date.
- * 3. Robust parameter parsing and spreadsheet storage.
- */
+ * 1. Sheet Recording (record_data): Automatically appends form entries to Sheet.
+ * 2. Instant Welcome Email: Automatically sends rich HTML confirmation email & .ics file to submitter.
+ * 3. Scheduled Date Reminders: Sends automated morning reminder emails 1 day prior to selected Expo date.
+ ******************************************************************************/
+
+// Optional fallback recipient (leave blank to send directly to form submitter)
+var TO_ADDRESS = "";
 
 function doPost(e) {
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = {};
+    Logger.log(JSON.stringify(e));
 
-    // 1. Robust parameter extraction & array sanitization
-    if (e && e.parameter && Object.keys(e.parameter).length > 0) {
-      data = e.parameter;
-    } else if (e && e.parameters && Object.keys(e.parameters).length > 0) {
+    // 1. Record form data to active Google Sheet
+    record_data(e);
+
+    // 2. Extract submitted parameters
+    var data = {};
+    if (e && e.parameters && Object.keys(e.parameters).length > 0) {
       data = e.parameters;
+    } else if (e && e.parameter && Object.keys(e.parameter).length > 0) {
+      data = e.parameter;
     } else if (e && e.postData && e.postData.contents) {
       try {
         data = JSON.parse(e.postData.contents);
@@ -37,16 +43,71 @@ function doPost(e) {
       return String(val).trim();
     }
 
-    var timestamp = sanitizeString(data.timestamp) || new Date().toISOString();
-    var name = sanitizeString(data.name);
-    var countryCode = sanitizeString(data.countryCode);
-    var mobile = (countryCode ? '+' + countryCode + ' ' : '') + sanitizeString(data.mobile);
-    var email = sanitizeString(data.email);
-    var city = sanitizeString(data.city);
-    var category = sanitizeString(data.category);
-    var days = sanitizeString(data.days); // e.g. "Sep 25" or "Sep 25, Sep 26"
+    var name = sanitizeString(data.name || data.Name || data['FULL NAME']);
+    var countryCode = sanitizeString(data.countryCode || data.country_code);
+    var mobile = (countryCode ? '+' + countryCode + ' ' : '') + sanitizeString(data.mobile || data.Mobile || data['MOBILE NUMBER']);
+    var email = sanitizeString(data.email || data.Email || data['EMAIL ADDRESS']);
+    var city = sanitizeString(data.city || data.City || data['CITY / DISTRICT']);
+    var category = sanitizeString(data.category || data.Category || data['I AM A']);
+    var days = sanitizeString(data.days || data.Days || data['WHICH DAY(S) WILL YOU ATTEND?']);
 
-    // 2. Append row to spreadsheet
+    // 3. Send INSTANT WELCOME & CONFIRMATION EMAIL to form submitter
+    var emailStatus = "No email address found in form submission";
+    if (email && email.indexOf('@') !== -1) {
+      emailStatus = sendInstantWelcomeEmail(name, email, days, city, category);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        result: "success",
+        message: "Data recorded successfully",
+        emailSentTo: email,
+        emailStatus: emailStatus
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    Logger.log("doPost Error: " + error.toString());
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        result: "error",
+        error: error.toString()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Record submission to Google Sheet responses tab
+ */
+function record_data(e) {
+  var lock = LockService.getDocumentLock();
+  try {
+    lock.waitLock(30000); // hold off up to 30 sec to avoid concurrent writing
+  } catch (lErr) {
+    Logger.log("Lock error: " + lErr.toString());
+  }
+
+  try {
+    var doc = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = doc.getActiveSheet();
+
+    var params = e ? (e.parameters || e.parameter || {}) : {};
+    
+    function getVal(key) {
+      var val = params[key] || '';
+      return Array.isArray(val) ? val.join(', ') : String(val);
+    }
+
+    var timestamp = new Date();
+    var name = getVal('name') || getVal('Name') || getVal('FULL NAME');
+    var countryCode = getVal('countryCode');
+    var mobile = (countryCode ? '+' + countryCode + ' ' : '') + (getVal('mobile') || getVal('Mobile') || getVal('MOBILE NUMBER'));
+    var email = getVal('email') || getVal('Email') || getVal('EMAIL ADDRESS');
+    var city = getVal('city') || getVal('City') || getVal('CITY / DISTRICT');
+    var category = getVal('category') || getVal('Category') || getVal('I AM A');
+    var days = getVal('days') || getVal('Days') || getVal('WHICH DAY(S) WILL YOU ATTEND?');
+
     sheet.appendRow([
       timestamp,
       name,
@@ -57,28 +118,10 @@ function doPost(e) {
       days
     ]);
 
-    // 3. Send INSTANT WELCOME & CONFIRMATION EMAIL to submitter
-    var emailResult = 'No email provided';
-    if (email && email.indexOf('@') !== -1) {
-      emailResult = sendInstantWelcomeEmail(name, email, days, city, category);
-    }
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ 
-        status: 'success', 
-        message: 'Pre-registration saved and instant welcome email sent.',
-        emailSentTo: email,
-        emailResult: emailResult
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
-
   } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ 
-        status: 'error', 
-        message: error.toString() 
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    Logger.log("record_data Error: " + error.toString());
+  } finally {
+    try { lock.releaseLock(); } catch(fErr) {}
   }
 }
 
@@ -148,7 +191,7 @@ function generateIcsCalendar(name, email, daysString) {
 }
 
 /**
- * 1. INSTANT WELCOME EMAIL (Sent immediately on form submit)
+ * 1. INSTANT WELCOME EMAIL (Sent immediately to form submitter)
  */
 function sendInstantWelcomeEmail(name, email, days, city, category) {
   if (!email || typeof email !== 'string' || email.indexOf('@') === -1) {
@@ -247,31 +290,30 @@ function sendInstantWelcomeEmail(name, email, days, city, category) {
       htmlBody: htmlBody,
       attachments: [icsBlob]
     });
-    return 'Instant Welcome Email sent to ' + email;
+    return 'Instant Welcome Email sent successfully to ' + email;
   } catch (mErr) {
     try {
       GmailApp.sendEmail(email, subject, "Please view in an HTML compatible email viewer.", {
         htmlBody: htmlBody,
         attachments: [icsBlob]
       });
-      return 'Instant Welcome Email (GmailApp) sent to ' + email;
+      return 'Instant Welcome Email (GmailApp) sent successfully to ' + email;
     } catch (gErr) {
+      Logger.log("Send email failed: " + gErr.toString());
       return 'Email error: ' + gErr.toString();
     }
   }
 }
 
 /**
- * 2. SCHEDULED EVENT DAY REMINDER (Triggered automatically 1 day before selected Expo date)
+ * 2. SCHEDULED EVENT DAY REMINDER (Triggered automatically prior to selected Expo date)
  */
 function sendScheduledDayReminders() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var rows = sheet.getDataRange().getValues();
-  if (rows.length <= 1) return; // Skip header
+  if (rows.length <= 1) return;
 
-  var today = new Date();
   var sentCount = 0;
-
   for (var i = 1; i < rows.length; i++) {
     var name = rows[i][1] || '';
     var email = rows[i][3] || '';
@@ -279,18 +321,13 @@ function sendScheduledDayReminders() {
     var category = rows[i][5] || 'Visitor';
 
     if (email && email.indexOf('@') !== -1 && days) {
-      // Send reminder if today/tomorrow matches event dates
       sendEventDayReminderEmail(name, email, days, category);
       sentCount++;
     }
   }
-
-  Logger.log("Scheduled day reminders sent to " + sentCount + " registrants.");
+  Logger.log("Scheduled reminders sent to " + sentCount + " registrants.");
 }
 
-/**
- * Sends Day-Of / Scheduled Pre-Event Reminder Email
- */
 function sendEventDayReminderEmail(name, email, days, category) {
   var subject = "⏰ Reminder: Masters Kerala RE 2.0 EXPO26 is Coming Up! (" + days + ")";
 
@@ -333,10 +370,9 @@ function sendEventDayReminderEmail(name, email, days, category) {
 }
 
 /**
- * 3. Helper to setup Daily Reminder Trigger (Run this function once in Apps Script)
+ * Run this function once in Apps Script to setup daily automated reminders
  */
 function setupDailyReminderTrigger() {
-  // Delete old triggers first
   var triggers = ScriptApp.getProjectTriggers();
   for (var i = 0; i < triggers.length; i++) {
     if (triggers[i].getHandlerFunction() === 'sendScheduledDayReminders') {
@@ -344,12 +380,11 @@ function setupDailyReminderTrigger() {
     }
   }
 
-  // Create new daily trigger running at 8:00 AM IST
   ScriptApp.newTrigger('sendScheduledDayReminders')
     .timeBased()
     .everyDays(1)
     .atHour(8)
     .create();
 
-  Logger.log("Daily reminder trigger successfully created for 8:00 AM IST!");
+  Logger.log("Daily 8:00 AM IST reminder trigger created!");
 }
