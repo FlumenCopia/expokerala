@@ -714,13 +714,40 @@
         var container = document.getElementById('gcal-buttons-container');
         container.innerHTML = '';
 
-        days.forEach(function(day) {
+        var dayOrder = ['Sep 25', 'Sep 26', 'Sep 27'];
+        var sortedDays = (days || []).slice().sort(function(a, b) {
+            return dayOrder.indexOf(a) - dayOrder.indexOf(b);
+        });
+
+        if (sortedDays.length > 1) {
+            var firstDay = sortedDays[0];
+            var lastDay = sortedDays[sortedDays.length - 1];
+            var combinedStart = dateMap[firstDay] ? dateMap[firstDay].start : '20260925T043000Z';
+            var combinedEnd = dateMap[lastDay] ? dateMap[lastDay].end : '20260927T133000Z';
+            var combinedUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+                '&text=' + encodeURIComponent('Masters Kerala RE 2.0 EXPO26 (' + sortedDays.join(', ') + ')') +
+                '&dates=' + combinedStart + '/' + combinedEnd +
+                '&details=' + encodeURIComponent('Pre-registration reminder for Masters Kerala RE 2.0 EXPO26.\nSelected Date(s): ' + sortedDays.join(', ') + '\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
+                '&location=' + encodeURIComponent('Lulu Mall, Thiruvananthapuram, Kerala, India');
+
+            var combinedA = document.createElement('a');
+            combinedA.href = combinedUrl;
+            combinedA.target = '_blank';
+            combinedA.rel = 'noopener noreferrer';
+            combinedA.className = 'gcal-btn';
+            combinedA.style.borderColor = 'var(--green2)';
+            combinedA.style.background = 'linear-gradient(135deg, rgba(3,150,35,0.25), rgba(34,197,94,0.25))';
+            combinedA.innerHTML = '<span><i class="fa-brands fa-google"></i> Add All Selected Days (' + sortedDays.join(', ') + ')</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+            container.appendChild(combinedA);
+        }
+
+        sortedDays.forEach(function(day) {
             var info = dateMap[day];
             if (info) {
                 var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
                     '&text=' + encodeURIComponent('Masters Kerala RE 2.0 EXPO26 (' + day + ')') +
                     '&dates=' + info.start + '/' + info.end +
-                    '&details=' + encodeURIComponent('Pre-registration reminder for Masters Kerala RE 2.0 EXPO26.\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
+                    '&details=' + encodeURIComponent('Pre-registration reminder for Masters Kerala RE 2.0 EXPO26.\nDate: ' + day + '\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
                     '&location=' + encodeURIComponent('Lulu Mall, Thiruvananthapuram, Kerala, India');
 
                 var a = document.createElement('a');
@@ -728,7 +755,7 @@
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
                 a.className = 'gcal-btn';
-                a.innerHTML = '<span><i class="fa-brands fa-google"></i> Add ' + info.label + ' to Google Calendar</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                a.innerHTML = '<span><i class="fa-brands fa-google"></i> Add ' + info.label + '</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
                 container.appendChild(a);
             }
         });
