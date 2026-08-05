@@ -173,8 +173,8 @@ function generateIcsCalendar(name, email, daysString) {
     'DTSTART:' + range.start,
     'DTEND:' + range.end,
     'SUMMARY:Masters Kerala RE 2.0 EXPO26 (' + daysString + ')',
-    'DESCRIPTION:Official Pre-Registration Confirmation for ' + name + '\\nEvent: Masters Kerala RE 2.0 EXPO26\\nSelected Days: ' + daysString + '\\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam\\nTime: 10:00 AM - 7:00 PM IST',
-    'LOCATION:Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala, India',
+    'DESCRIPTION:Official Pre-Registration Confirmation for ' + name + '\\nEvent: Masters Kerala RE 2.0 EXPO26\\nSelected Days: ' + daysString + '\\nVenue: LuLu Mall, Thiruvananthapuram\\nTime: 10:00 AM - 7:00 PM IST',
+    'LOCATION:LuLu Mall, Thiruvananthapuram, Kerala, India',
     'STATUS:CONFIRMED',
     'SEQUENCE:0',
     (email ? ('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + name + ':mailto:' + email + '\r\n') : '') +
@@ -204,8 +204,8 @@ function sendInstantWelcomeEmail(name, email, days, city, category) {
   var gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
                 "&text=" + encodeURIComponent("Masters Kerala RE 2.0 EXPO26 (" + days + ")") +
                 "&dates=" + dateRange.start + "/" + dateRange.end +
-                "&details=" + encodeURIComponent("Pre-Registration Confirmation for " + name + "\nCategory: " + (category || 'Visitor') + "\nSelected Days: " + days + "\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam") +
-                "&location=" + encodeURIComponent("Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala, India");
+                "&details=" + encodeURIComponent("Pre-Registration Confirmation for " + name + "\nCategory: " + (category || 'Visitor') + "\nSelected Days: " + days + "\nVenue: LuLu Mall, Thiruvananthapuram") +
+                "&location=" + encodeURIComponent("LuLu Mall, Thiruvananthapuram, Kerala, India");
 
   var htmlBody = '<!DOCTYPE html>' +
     '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>' +
@@ -233,7 +233,7 @@ function sendInstantWelcomeEmail(name, email, days, city, category) {
             '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Selected Days:</strong></td><td style="color: #22c55e; font-weight: 700;">' + days + ' (September 2026)</td></tr>' +
             '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Category:</strong></td><td style="color: #f5c800; font-weight: 600;">' + (category || 'Visitor') + '</td></tr>' +
             '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Exhibition Hours:</strong></td><td style="color: #ffffff;">10:00 AM – 7:00 PM IST</td></tr>' +
-            '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Venue:</strong></td><td style="color: #ffffff;">Puthiyakavu Ground, Thripunithura, Ernakulam</td></tr>' +
+            '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Venue:</strong></td><td style="color: #ffffff;">LuLu Mall, Thiruvananthapuram</td></tr>' +
           '</table>' +
         '</div>' +
 
@@ -260,8 +260,8 @@ function sendInstantWelcomeEmail(name, email, days, city, category) {
         '<!-- VENUE LOCATION CARD -->' +
         '<div style="background: rgba(3, 150, 35, 0.1); border: 1px solid rgba(3, 150, 35, 0.25); border-radius: 12px; padding: 16px; margin-top: 24px; text-align: center;">' +
           '<p style="margin: 0 0 8px 0; font-size: 14px; color: #22c55e; font-weight: 600;">📍 Venue Location</p>' +
-          '<p style="margin: 0 0 12px 0; font-size: 13px; color: #e2e8f0;">Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala</p>' +
-          '<a href="https://maps.app.goo.gl/6JspoZZUVwn796Gc6" target="_blank" style="color: #38bdf8; font-size: 13px; font-weight: 600; text-decoration: none;">View Location on Google Maps ➔</a>' +
+          '<p style="margin: 0 0 12px 0; font-size: 13px; color: #e2e8f0;">LuLu Mall, Thiruvananthapuram, Kerala</p>' +
+          '<a href="https://maps.google.com/?q=LuLu+Mall+Thiruvananthapuram" target="_blank" style="color: #38bdf8; font-size: 13px; font-weight: 600; text-decoration: none;">View Location on Google Maps ➔</a>' +
         '</div>' +
 
         '<!-- HELPLINE -->' +
@@ -335,8 +335,8 @@ function sendEventDayReminderEmail(name, email, days, category) {
   var gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
                 "&text=" + encodeURIComponent("Masters Kerala RE 2.0 EXPO26 (" + days + ")") +
                 "&dates=" + dateRange.start + "/" + dateRange.end +
-                "&details=" + encodeURIComponent("Event Reminder for " + name + "\nSelected Days: " + days + "\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam") +
-                "&location=" + encodeURIComponent("Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala, India");
+                "&details=" + encodeURIComponent("Event Reminder for " + name + "\nSelected Days: " + days + "\nVenue: LuLu Mall, Thiruvananthapuram") +
+                "&location=" + encodeURIComponent("LuLu Mall, Thiruvananthapuram, Kerala, India");
 
   var htmlBody = '<!DOCTYPE html>' +
     '<html><head><meta charset="utf-8"></head><body style="font-family: Arial, sans-serif; background-color: #0b0f19; margin:0; padding:20px; color: #e2e8f0;">' +
@@ -349,7 +349,7 @@ function sendEventDayReminderEmail(name, email, days, category) {
       '<p>This is a quick reminder that your selected date for <strong>Masters Kerala RE 2.0 EXPO26</strong> is approaching on <strong>' + days + ' (September 2026)</strong>!</p>' +
       '<div style="background: rgba(255,255,255,0.04); border-left: 4px solid #f5c800; padding: 16px; margin: 20px 0; border-radius: 6px;">' +
         '<p style="margin:0 0 6px 0;"><strong>Timing:</strong> 10:00 AM – 7:00 PM IST</p>' +
-        '<p style="margin:0 0 6px 0;"><strong>Venue:</strong> Puthiyakavu Ground, Thripunithura, Ernakulam</p>' +
+        '<p style="margin:0 0 6px 0;"><strong>Venue:</strong> LuLu Mall, Thiruvananthapuram</p>' +
         '<p style="margin:0;"><strong>Category:</strong> ' + category + '</p>' +
       '</div>' +
       '<div style="text-align: center; margin: 24px 0;">' +
