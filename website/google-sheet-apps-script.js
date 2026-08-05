@@ -3,7 +3,7 @@
  * 
  * Features:
  * 1. Appends pre-registration data to active Google Sheet.
- * 2. Sends confirmation email directly to registrant with attached .ics iCalendar file.
+ * 2. Sends beautiful confirmation email directly to registrant with attached .ics iCalendar file.
  */
 
 function doPost(e) {
@@ -100,8 +100,8 @@ function generateIcsCalendar(name, email, daysString) {
     'DTSTART:' + range.start,
     'DTEND:' + range.end,
     'SUMMARY:Masters Kerala RE 2.0 EXPO26 (' + daysString + ')',
-    'DESCRIPTION:Official Pre-Registration Reminder for ' + name + '\\nEvent: Masters Kerala RE 2.0 EXPO26\\nSelected Days: ' + daysString + '\\nVenue: Lulu Mall, Thiruvananthapuram\\nTime: 10:00 AM - 7:00 PM IST',
-    'LOCATION:Lulu Mall, Thiruvananthapuram, Kerala, India',
+    'DESCRIPTION:Official Pre-Registration Reminder for ' + name + '\\nEvent: Masters Kerala RE 2.0 EXPO26\\nSelected Days: ' + daysString + '\\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam\\nTime: 10:00 AM - 7:00 PM IST',
+    'LOCATION:Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala, India',
     'STATUS:CONFIRMED',
     'SEQUENCE:0',
     (email ? ('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + name + ':mailto:' + email + '\r\n') : '') +
@@ -118,42 +118,89 @@ function generateIcsCalendar(name, email, daysString) {
 }
 
 /**
- * Sends an HTML reminder email to the registrant with event & Google Calendar details.
+ * Sends a rich, premium HTML confirmation email to the registrant.
  */
 function sendReminderEmail(name, email, days, city, category) {
-  var subject = "Pre-Registration Confirmed: Masters Kerala RE 2.0 EXPO26 (" + days + ")";
+  var subject = "🎉 Registration Confirmed: Masters Kerala RE 2.0 EXPO26 (" + days + ")";
 
   var dateRange = getSelectedDatesRange(days);
   var gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
                 "&text=" + encodeURIComponent("Masters Kerala RE 2.0 EXPO26 (" + days + ")") +
                 "&dates=" + dateRange.start + "/" + dateRange.end +
-                "&details=" + encodeURIComponent("Pre-Registration Confirmation for " + name + "\nCategory: " + (category || 'Visitor') + "\nSelected Days: " + days + "\nVenue: Lulu Mall, Thiruvananthapuram") +
-                "&location=" + encodeURIComponent("Lulu Mall, Thiruvananthapuram, Kerala, India");
+                "&details=" + encodeURIComponent("Pre-Registration Confirmation for " + name + "\nCategory: " + (category || 'Visitor') + "\nSelected Days: " + days + "\nVenue: Puthiyakavu Ground, Thripunithura, Ernakulam") +
+                "&location=" + encodeURIComponent("Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala, India");
 
   var htmlBody = '<!DOCTYPE html>' +
-    '<html><head><meta charset="utf-8"></head><body style="font-family: Arial, sans-serif; background-color: #f4f6f9; margin:0; padding:20px;">' +
-    '<div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">' +
-      '<div style="background: linear-gradient(135deg, #039623, #243546); padding: 30px; text-align: center; color: #ffffff;">' +
-        '<h1 style="margin: 0; font-size: 24px;">Pre-Registration Confirmed! 🎉</h1>' +
-        '<p style="margin-top: 8px; font-size: 15px; opacity: 0.9;">Masters Kerala RE 2.0 EXPO26</p>' +
-      '</div>' +
-      '<div style="padding: 30px; color: #333333; line-height: 1.6;">' +
-        '<p>Dear <strong>' + name + '</strong>,</p>' +
-        '<p>Thank you for pre-registering for <strong>Masters Kerala RE 2.0 EXPO26</strong>! This email serves as your official confirmation and event reminder for your selected date(s).</p>' +
-        '<div style="background: #f8fafc; border-left: 4px solid #039623; padding: 16px; margin: 20px 0; border-radius: 4px;">' +
-          '<p style="margin:0 0 6px 0;"><strong>Selected Date(s):</strong> ' + days + ' (September 2026)</p>' +
-          '<p style="margin:0 0 6px 0;"><strong>Timing:</strong> 10:00 AM – 7:00 PM IST</p>' +
-          '<p style="margin:0 0 6px 0;"><strong>Location:</strong> Lulu Mall, Thiruvananthapuram</p>' +
-          '<p style="margin:0;"><strong>Category:</strong> ' + (category || 'Visitor') + '</p>' +
+    '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>' +
+    '<body style="font-family: \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; background-color: #0b0f19; margin:0; padding:20px; color: #e2e8f0;">' +
+    '<div style="max-width: 620px; margin: 0 auto; background: #131927; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">' +
+      
+      '<!-- HEADER -->' +
+      '<div style="background: linear-gradient(135deg, #039623, #15321f, #090d16); padding: 36px 30px; text-align: center; border-bottom: 2px solid #039623;">' +
+        '<div style="display:inline-block; background: rgba(245, 200, 0, 0.15); border: 1px solid rgba(245,200,0,0.4); color: #f5c800; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">' +
+          'OFFICIAL PRE-REGISTRATION CONFIRMED' +
         '</div>' +
-        '<div style="text-align: center; margin: 30px 0;">' +
-          '<a href="' + gcalUrl + '" target="_blank" style="background-color: #039623; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 15px;">📅 Add Selected Days to Google Calendar</a>' +
+        '<h1 style="margin: 0 0 6px 0; font-size: 26px; color: #ffffff; font-weight: 800; tracking: -0.5px;">Masters Kerala RE 2.0 EXPO26</h1>' +
+        '<p style="margin: 0; font-size: 14px; color: #a0aec0;">Kerala\'s Premier Renewable Energy Exhibition & Conference</p>' +
+      '</div>' +
+
+      '<!-- MAIN CONTENT -->' +
+      '<div style="padding: 32px 30px; line-height: 1.6;">' +
+        '<p style="font-size: 16px; color: #ffffff; margin-top: 0;">Dear <strong>' + name + '</strong>,</p>' +
+        '<p style="font-size: 14.5px; color: #cbd5e1; margin-bottom: 24px;">Your spot for <strong>Masters Kerala RE 2.0 EXPO26</strong> has been successfully reserved! Below are your registration details and event calendar link.</p>' +
+
+        '<!-- CONFIRMATION BADGE CARD -->' +
+        '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 20px; margin-bottom: 28px;">' +
+          '<table style="width: 100%; border-collapse: collapse; font-size: 14px;">' +
+            '<tr><td style="padding: 6px 0; color: #94a3b8; width: 140px;"><strong>Registrant:</strong></td><td style="color: #ffffff; font-weight: 600;">' + name + '</td></tr>' +
+            '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Selected Days:</strong></td><td style="color: #22c55e; font-weight: 700;">' + days + ' (September 2026)</td></tr>' +
+            '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Category:</strong></td><td style="color: #f5c800; font-weight: 600;">' + (category || 'Visitor') + '</td></tr>' +
+            '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Exhibition Hours:</strong></td><td style="color: #ffffff;">10:00 AM – 7:00 PM IST</td></tr>' +
+            '<tr><td style="padding: 6px 0; color: #94a3b8;"><strong>Venue:</strong></td><td style="color: #ffffff;">Puthiyakavu Ground, Thripunithura, Ernakulam</td></tr>' +
+          '</table>' +
         '</div>' +
-        '<p style="font-size: 13px; color: #666666;">We have also attached an <strong>iCalendar (.ics)</strong> file to this email so Gmail can automatically render an interactive Google Calendar event card in your inbox.</p>' +
+
+        '<!-- CALENDAR BUTTON & NOTE -->' +
+        '<div style="text-align: center; margin: 28px 0;">' +
+          '<a href="' + gcalUrl + '" target="_blank" style="background: linear-gradient(135deg, #039623, #026b19); color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 10px; font-weight: 700; display: inline-block; font-size: 15px; box-shadow: 0 6px 20px rgba(3, 150, 35, 0.4);">' +
+            '📅 Add Selected Days to Google Calendar' +
+          '</a>' +
+          '<p style="font-size: 12.5px; color: #94a3b8; margin-top: 12px;">' +
+            '💡 <em>An interactive <strong>.ics Calendar file</strong> is also attached below for auto-syncing with Outlook / Apple / Gmail calendars.</em>' +
+          '</p>' +
+        '</div>' +
+
+        '<!-- EXPO HIGHLIGHTS SECTION -->' +
+        '<div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 24px; margin-top: 24px;">' +
+          '<h3 style="color: #ffffff; font-size: 16px; margin-bottom: 14px;">🌟 What to Expect at Expo 2026:</h3>' +
+          '<div style="display: grid; gap: 10px; font-size: 13.5px; color: #cbd5e1;">' +
+            '<p style="margin: 4px 0;">⚡ <strong>300+ Clean Energy Brands:</strong> Explore cutting-edge Solar, Wind, EV, and Battery Storage innovations.</p>' +
+            '<p style="margin: 4px 0;">🤝 <strong>B2B & High-Level Networking:</strong> Meet industry pioneers, government officials, EPCs, and suppliers.</p>' +
+            '<p style="margin: 4px 0;">💡 <strong>Technical Conferences:</strong> Attend live product launches and expert panel discussions.</p>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- VENUE LOCATION CARD -->' +
+        '<div style="background: rgba(3, 150, 35, 0.1); border: 1px solid rgba(3, 150, 35, 0.25); border-radius: 12px; padding: 16px; margin-top: 24px; text-align: center;">' +
+          '<p style="margin: 0 0 8px 0; font-size: 14px; color: #22c55e; font-weight: 600;">📍 Venue Location</p>' +
+          '<p style="margin: 0 0 12px 0; font-size: 13px; color: #e2e8f0;">Puthiyakavu Ground, Thripunithura, Ernakulam, Kerala</p>' +
+          '<a href="https://maps.app.goo.gl/6JspoZZUVwn796Gc6" target="_blank" style="color: #38bdf8; font-size: 13px; font-weight: 600; text-decoration: none;">View Location on Google Maps ➔</a>' +
+        '</div>' +
+
+        '<!-- HELPLINE -->' +
+        '<div style="border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 28px; padding-top: 20px; font-size: 13px; color: #94a3b8; text-align: center;">' +
+          '<p style="margin: 0 0 4px 0;">Have questions or need assistance?</p>' +
+          '<p style="margin: 0; color: #e2e8f0;">📞 Call Us: <strong style="color:#ffffff;">+91 81298 38288</strong> | ✉️ Email: <a href="mailto:info@solarmasters.org" style="color:#38bdf8; text-decoration:none;">info@solarmasters.org</a></p>' +
+        '</div>' +
+
       '</div>' +
-      '<div style="background: #eef2f7; padding: 16px; text-align: center; font-size: 12px; color: #666666;">' +
-        '© 2026 Masters Kerala RE 2.0 EXPO26. All rights reserved.' +
+
+      '<!-- FOOTER -->' +
+      '<div style="background: #090d16; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.05);">' +
+        '<p style="margin: 0 0 6px 0;">Powered by <a href="https://solarmasters.org/" target="_blank" style="color: #22c55e; text-decoration: none; font-weight: 600;">Masters Association</a></p>' +
+        '<p style="margin: 0;">© 2026 Masters Kerala RE 2.0 EXPO26. All rights reserved.</p>' +
       '</div>' +
+
     '</div></body></html>';
 
   var icsString = generateIcsCalendar(name, email, days);
