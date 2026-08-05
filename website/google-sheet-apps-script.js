@@ -2,24 +2,42 @@
  * Google Apps Script for Pre-Registration Form Handling
  * 
  * Features:
- * 1. Appends pre-registration data to active Google Sheet.
- * 2. Sends beautiful confirmation email directly to registrant with attached .ics iCalendar file.
+ * 1. Robust parameter parsing (e.parameter, JSON, urlencoded).
+ * 2. Appends pre-registration data to active Google Sheet.
+ * 3. Sends beautiful confirmation email directly to registrant with attached .ics iCalendar file.
  */
 
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = e.parameter || {};
+    var data = {};
+
+    // 1. Robust parameter extraction
+    if (e && e.parameter && Object.keys(e.parameter).length > 0) {
+      data = e.parameter;
+    } else if (e && e.postData && e.postData.contents) {
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (err) {
+        var pairs = e.postData.contents.split('&');
+        for (var i = 0; i < pairs.length; i++) {
+          var pair = pairs[i].split('=');
+          if (pair[0]) {
+            data[decodeURIComponent(pair[0])] = decodeURIComponent((pair[1] || '').replace(/\+/g, ' '));
+          }
+        }
+      }
+    }
 
     var timestamp = data.timestamp || new Date().toISOString();
-    var name = data.name || '';
-    var mobile = (data.countryCode ? '+' + data.countryCode + ' ' : '') + (data.mobile || '');
-    var email = data.email || '';
-    var city = data.city || '';
-    var category = data.category || '';
-    var days = data.days || ''; // e.g. "Sep 25" or "Sep 25, Sep 26"
+    var name = (data.name || '').trim();
+    var mobile = (data.countryCode ? '+' + data.countryCode + ' ' : '') + (data.mobile || '').trim();
+    var email = (data.email || '').trim();
+    var city = (data.city || '').trim();
+    var category = (data.category || '').trim();
+    var days = (data.days || '').trim(); // e.g. "Sep 25" or "Sep 25, Sep 26"
 
-    // 1. Append row to spreadsheet
+    // 2. Append row to spreadsheet
     sheet.appendRow([
       timestamp,
       name,
@@ -30,7 +48,7 @@ function doPost(e) {
       days
     ]);
 
-    // 2. Send reminder email directly to registrant with .ics calendar attachment for selected dates
+    // 3. Send reminder email directly to registrant with .ics calendar attachment for selected dates
     if (email) {
       sendReminderEmail(name, email, days, city, category);
     }
@@ -38,7 +56,7 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({ 
         status: 'success', 
-        message: 'Pre-registration saved and reminder email sent.'
+        message: 'Pre-registration saved and reminder email sent to ' + email
       }))
       .setMimeType(ContentService.MimeType.JSON);
 
@@ -121,6 +139,8 @@ function generateIcsCalendar(name, email, daysString) {
  * Sends a rich, premium HTML confirmation email to the registrant.
  */
 function sendReminderEmail(name, email, days, city, category) {
+  if (!email || email.indexOf('@') === -1) return;
+
   var subject = "🎉 Registration Confirmed: Masters Kerala RE 2.0 EXPO26 (" + days + ")";
 
   var dateRange = getSelectedDatesRange(days);
@@ -206,10 +226,21 @@ function sendReminderEmail(name, email, days, city, category) {
   var icsString = generateIcsCalendar(name, email, days);
   var icsBlob = Utilities.newBlob(icsString, 'text/calendar; method=REQUEST; charset=UTF-8', 'event-reminder.ics');
 
-  MailApp.sendEmail({
-    to: email,
-    subject: subject,
-    htmlBody: htmlBody,
-    attachments: [icsBlob]
-  });
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: subject,
+      htmlBody: htmlBody,
+      attachments: [icsBlob]
+    });
+  } catch (mErr) {
+    try {
+      GmailApp.sendEmail(email, subject, "Please view in an HTML compatible email viewer.", {
+        htmlBody: htmlBody,
+        attachments: [icsBlob]
+      });
+    } catch (gErr) {
+      Logger.log("Send email failed: " + gErr.toString());
+    }
+  }
 }
