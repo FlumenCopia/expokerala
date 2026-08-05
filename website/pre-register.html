@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <!-- Supabase JS SDK & Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./script/js/supabase-config.js"></script>
+
     <style>
         :root {
             --green:   #039623;
@@ -794,6 +798,29 @@
         });
     }
 
+    function saveToSupabase(data) {
+        if (!window.expoSupabase) return Promise.resolve();
+        try {
+            return Promise.resolve(
+                window.expoSupabase
+                    .from('pre_registrations')
+                    .insert([{
+                        name: data.name,
+                        country_code: data.countryCode,
+                        mobile: data.mobile,
+                        email: data.email,
+                        city: data.city,
+                        category: data.category,
+                        days: data.days
+                    }])
+            ).catch(function(err) {
+                console.warn('Supabase notice:', err ? (err.message || err) : 'Offline/Network fallback');
+            });
+        } catch (e) {
+            return Promise.resolve();
+        }
+    }
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         var valid = true;
@@ -840,6 +867,10 @@
             category: cat,
             days: selectedDays.join(', '),
         };
+
+        // Save to Supabase and submit to Google Sheet
+        saveToSupabase(registrationData)
+            .catch(function(err) { console.error('Supabase error:', err); });
 
         submitToGoogleSheet(registrationData)
             .then(function() {

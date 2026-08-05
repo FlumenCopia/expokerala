@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="./style-css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Supabase JS SDK & Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./script/js/supabase-config.js"></script>
 
     <style>
         .ex-reg-sec { padding: 4em 0; }
@@ -178,6 +181,26 @@
             const formData = new FormData(this);
             formData.append('company_id',    '12');
             formData.append('exhibition_id', '20');
+
+            // Save to Supabase
+            if (window.expoSupabase) {
+                Promise.resolve(
+                    window.expoSupabase
+                        .from('exhibitor_registrations')
+                        .insert([{
+                            name: formData.get('name'),
+                            designation: formData.get('designation'),
+                            company_name: formData.get('firm_name'),
+                            mobile: formData.get('mobile'),
+                            email: formData.get('email'),
+                            address: formData.get('address'),
+                            pincode: formData.get('pincode'),
+                            city: formData.get('city'),
+                            state: formData.get('state'),
+                            country: formData.get('country')
+                        }])
+                ).catch(err => console.error('Supabase Exhibitor error:', err));
+            }
 
             fetch('https://event.rowbest.in/api/master-visitor-reg', {
                 method: 'POST',

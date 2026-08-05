@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="./style-css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Supabase JS SDK & Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./script/js/supabase-config.js"></script>
 </head>
 
 <body>
@@ -252,6 +255,28 @@
             const formData = new FormData(this);
             formData.append('company_id',    '12');
             formData.append('exhibition_id', '20');
+
+            // Save to Supabase
+            if (window.expoSupabase) {
+                Promise.resolve(
+                    window.expoSupabase
+                        .from('sub_event_registrations')
+                        .insert([{
+                            event_slug: formData.get('slug'),
+                            name: formData.get('name'),
+                            country_code: formData.get('countryCode'),
+                            mobile: formData.get('mobile'),
+                            email: formData.get('email'),
+                            visit_profile: formData.get('visit_profile'),
+                            company_name: formData.get('company_name'),
+                            designation: formData.get('designation'),
+                            address: formData.get('address'),
+                            city: formData.get('city'),
+                            state: formData.get('state'),
+                            pincode: formData.get('pincode')
+                        }])
+                ).catch(err => console.error('Supabase SubEvent error:', err));
+            }
 
             fetch('https://event.rowbest.in/api/sub-event-visitor-reg', {
                 method: 'POST',
