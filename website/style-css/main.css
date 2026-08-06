@@ -1196,14 +1196,24 @@ top: 0 ;
 }
 
 .flr-map {
-    width: 1100px;
+    width: 100%;
+    max-width: 1150px;
     margin: 0 auto;
     margin-top: 10px;
+    overflow: hidden;
+    padding: 10px 0;
 }
 
 .flr-map img {
     width: 100%;
+    height: auto;
     object-fit: contain;
+    transform: scale(1.08);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+.flr-map img:hover {
+    transform: scale(1.12);
 }
 
 .ind8-hdng {
