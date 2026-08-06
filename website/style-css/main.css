@@ -1192,28 +1192,37 @@ top: 0 ;
 }
 
 .ind7 {
-    padding: 80px 0;
+    padding: 60px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .flr-map {
     width: 100%;
-    max-width: 1150px;
+    max-width: 1200px;
     margin: 0 auto;
-    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     overflow: hidden;
     padding: 10px 0;
 }
 
 .flr-map img {
-    width: 100%;
+    max-width: 100%;
     height: auto;
+    display: block;
+    margin: 0 auto;
     object-fit: contain;
-    transform: scale(1.08);
-    transform-origin: center;
+    transform: scale(1.1);
+    transform-origin: center center;
     transition: transform 0.3s ease;
 }
 .flr-map img:hover {
-    transform: scale(1.12);
+    transform: scale(1.1);
 }
 
 .ind8-hdng {
