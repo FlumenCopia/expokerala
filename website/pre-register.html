@@ -22,8 +22,8 @@
 
     <style>
         :root {
-            --green:   #039623;
-            --green2:  #22c55e;
+            --green:   #7fee00;
+            --green2:  #95c841;
             --yellow:  #f5c800;
             --dark:    #0d1117;
             --dark2:   #111827;
@@ -281,21 +281,21 @@
 
         .pr-submit-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--green), #016b18);
-            color: #fff;
+            background: linear-gradient(135deg, #7fee00, #95c841);
+            color: #0d1117;
             border: none;
             border-radius: 14px;
             padding: 15px 24px;
             font-size: 15px;
             font-family: 'Manrope', sans-serif;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(3,150,35,0.35);
+            box-shadow: 0 8px 32px rgba(127, 238, 0, 0.35);
             margin-top: 6px;
             position: relative;
             overflow: hidden;
@@ -304,11 +304,11 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.12));
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2));
             opacity: 0;
             transition: opacity 0.3s;
         }
-        .pr-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(3,150,35,0.5); }
+        .pr-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(127, 238, 0, 0.5); background: linear-gradient(135deg, #95c841, #7fee00); }
         .pr-submit-btn:hover::after { opacity: 1; }
         .pr-submit-btn:active { transform: translateY(0); }
 
@@ -746,8 +746,8 @@
             combinedA.target = '_blank';
             combinedA.rel = 'noopener noreferrer';
             combinedA.className = 'gcal-btn';
-            combinedA.style.borderColor = 'var(--green2)';
-            combinedA.style.background = 'linear-gradient(135deg, rgba(3,150,35,0.25), rgba(34,197,94,0.25))';
+            combinedA.style.borderColor = 'var(--green)';
+            combinedA.style.background = 'linear-gradient(135deg, rgba(127,238,0,0.25), rgba(149,200,65,0.25))';
             combinedA.innerHTML = '<span><i class="fa-brands fa-google"></i> Add All Selected Days (' + sortedDays.join(', ') + ')</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
             container.appendChild(combinedA);
         }

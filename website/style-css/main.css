@@ -1437,11 +1437,18 @@ top: 0 ;
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
-    color: #ffffff;
-    padding: 10px;
+    color: #0d1117;
+    font-weight: 700;
+    padding: 12px;
     width: 100%;
-    background-color: #000000;
+    background: linear-gradient(135deg, #7fee00, #95c841);
+    border: none;
     border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.cnt-frm-bx button:hover {
+    background: linear-gradient(135deg, #95c841, #7fee00);
 }
 .map{
     width: 100%;
@@ -1667,11 +1674,9 @@ top: 0 ;
 
 
 .vist-input button {
-
-        background-color: #7dc245;
-
+    background: linear-gradient(135deg, #7fee00, #95c841);
     border: none;
-    color: #fff;
+    color: #0d1117;
     padding: 20px;
     border-radius: 30px;
     width: 100%;
@@ -1680,14 +1685,14 @@ top: 0 ;
     cursor: pointer;
     transition: all 0.3s;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 700;
     text-transform: uppercase;
     text-align: center;
-    border: 1px solid #243546;;
 }
 
 .vist-input button:disabled {
     background-color: #9e9e9e;
+    color: #fff;
     cursor: not-allowed;
 }
 
@@ -1697,9 +1702,8 @@ top: 0 ;
 }
 
 .vist-input button:hover {
-    background-color: #7dc245;
-    color: #fff;
-    border: 1px solid var(--secondary-color);
+    background: linear-gradient(135deg, #95c841, #7fee00);
+    color: #0d1117;
 }
 
 .visit-cont-blk {
@@ -2058,15 +2062,14 @@ footer {
 }
 
 .bk-tp-btn button {
-    background-image: linear-gradient(#79C143, #497805);
+    background: linear-gradient(135deg, #7fee00, #95c841);
     padding: 8px 10px;
-    color: #FFFFFF;
+    color: #0d1117;
     border: none;
     border-radius: 7px;
     font-size: 22px;
     cursor: pointer;
     transition: 0.3s;
-
 }
 
 .srv-img-an2 {
