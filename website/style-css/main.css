@@ -1703,7 +1703,8 @@ top: 0 ;
 }
 
 
-.vist-input button {
+.vist-input button.vist-regis-btn,
+.vist-input button[type="submit"] {
     background: linear-gradient(135deg, #7fee00, #95c841);
     border: none;
     color: #ffffff !important;
@@ -1723,19 +1724,22 @@ top: 0 ;
     box-shadow: 0 3px 10px rgba(127, 238, 0, 0.3);
 }
 
-.vist-input button:disabled {
+.vist-input button.vist-regis-btn:disabled,
+.vist-input button[type="submit"]:disabled {
     background: #e2e8f0 !important;
     color: #94a3b8 !important;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-.vist-input button:hover:disabled {
+.vist-input button.vist-regis-btn:hover:disabled,
+.vist-input button[type="submit"]:hover:disabled {
     background: #e2e8f0 !important;
     color: #94a3b8 !important;
 }
 
-.vist-input button:hover {
+.vist-input button.vist-regis-btn:hover,
+.vist-input button[type="submit"]:hover {
     background: linear-gradient(135deg, #95c841, #7fee00);
     color: #ffffff !important;
     transform: translateY(-1px);
