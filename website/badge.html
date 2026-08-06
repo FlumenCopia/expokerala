@@ -243,16 +243,18 @@
                 catch(e) { console.warn('Could not parse visitor data', e); }
             }
 
+            const formattedBadgeId = 'ReExpo2026/' + String(badgeNo).padStart(4, '0');
             document.getElementById('v-name').textContent        = visitor.name         || '-';
             document.getElementById('v-profile').textContent     = visitor.profile      || '-';
             document.getElementById('v-designation').textContent = visitor.designation  || '-';
             document.getElementById('v-company').textContent     = visitor.company_name || '-';
             document.getElementById('v-city').textContent        = visitor.city         || '-';
-            document.getElementById('v-badge-id').textContent    = 'ReExpo2026/' + String(badgeNo).padStart(4, '0');
+            document.getElementById('v-badge-id').textContent    = formattedBadgeId;
 
-            // Generate QR via free QRServer API (no library needed)
-            const entryUrl = 'https://event.rowbest.in/register/' + qrId;
-            const qrUrl    = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(entryUrl);
+            // Generate QR via free QRServer API containing structured EXPO26 badge payload
+            const mob = visitor.mobile_number || visitor.mobile || '';
+            const qrPayload = `EXPO26:VISITOR:${qrId}:${formattedBadgeId}:${mob}`;
+            const qrUrl    = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(qrPayload);
             document.getElementById('qr-img').src = qrUrl;
         })();
     </script>

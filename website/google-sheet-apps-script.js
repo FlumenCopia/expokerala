@@ -53,11 +53,13 @@ function doPost(e) {
     var regType = sanitizeString(data.registration_type || data.regType || (data.firm_name ? 'Exhibitor' : 'Visitor'));
     var company = sanitizeString(data.company_name || data.firm_name || data.company || '');
     var designation = sanitizeString(data.designation || '');
+    var badgeNo = sanitizeString(data.badge_no || data.badge_id || data.id || '1');
+    var qrId = sanitizeString(data.qr_id || data.id || '1');
 
     // 3. Send INSTANT WELCOME & CONFIRMATION EMAIL to form submitter
     var emailStatus = "No email address found in form submission";
     if (email && email.indexOf('@') !== -1) {
-      emailStatus = sendInstantWelcomeEmail(name, email, days, city, category, regType, company, designation);
+      emailStatus = sendInstantWelcomeEmail(name, email, days, city, category, regType, company, designation, badgeNo, qrId, mobile);
     }
 
     return ContentService
@@ -200,14 +202,30 @@ function generateIcsCalendar(name, email, daysString) {
 }
 
 /**
- * 1. INSTANT WELCOME EMAIL (Sent immediately to form submitter)
+ * 1. INSTANT WELCOME EMAIL (Sent immediately to form submitter with QR Code & Badge Details)
  */
-function sendInstantWelcomeEmail(name, email, days, city, category, regType, company, designation) {
+function sendInstantWelcomeEmail(name, email, days, city, category, regType, company, designation, badgeNo, qrId, mobile) {
   if (!email || typeof email !== 'string' || email.indexOf('@') === -1) {
     return 'Invalid email string: ' + String(email);
   }
 
   regType = regType || 'Visitor';
+  badgeNo = badgeNo || '1';
+  qrId = qrId || '0';
+  var formattedBadgeId = 'ReExpo2026/' + String(badgeNo).padStart(4, '0');
+  var qrPayload = 'EXPO26:' + String(regType).toUpperCase() + ':' + qrId + ':' + formattedBadgeId + ':' + (mobile || '');
+  var qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(qrPayload);
+
+  var visitorObj = {
+    name: name,
+    profile: category || regType,
+    company_name: company || '',
+    designation: designation || '',
+    city: city || '',
+    mobile_number: mobile || ''
+  };
+  var badgePageUrl = 'badge.html?qr_id=' + qrId + '&badge_no=' + badgeNo + '&visitor=' + encodeURIComponent(JSON.stringify(visitorObj));
+
   var typeTitle = (regType === 'Exhibitor') ? 'Exhibitor Registration Confirmed' : (regType === 'Visitor' ? 'Visitor Registration Confirmed' : 'Pre-Registration Confirmed');
   var subject = "🎉 Welcome to Masters Kerala RE 2.0 EXPO26 - " + typeTitle + "! (" + days + ")";
 
@@ -215,7 +233,7 @@ function sendInstantWelcomeEmail(name, email, days, city, category, regType, com
   var gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
                 "&text=" + encodeURIComponent("Masters Kerala RE 2.0 EXPO26 (" + days + ")") +
                 "&dates=" + dateRange.start + "/" + dateRange.end +
-                "&details=" + encodeURIComponent(typeTitle + " for " + name + "\nCategory/Role: " + (category || regType) + (company ? ("\nCompany: " + company) : "") + "\nSelected Days: " + days + "\nVenue: LuLu Mall, Thiruvananthapuram") +
+                "&details=" + encodeURIComponent(typeTitle + " for " + name + "\nCategory/Role: " + (category || regType) + (company ? ("\nCompany: " + company) : "") + "\nBadge ID: " + formattedBadgeId + "\nSelected Days: " + days + "\nVenue: LuLu Mall, Thiruvananthapuram") +
                 "&location=" + encodeURIComponent("LuLu Mall, Thiruvananthapuram, Kerala, India");
 
   var htmlBody = '<!DOCTYPE html>' +
@@ -241,12 +259,35 @@ function sendInstantWelcomeEmail(name, email, days, city, category, regType, com
           '<p style="font-size: 16px; color: #0f172a; margin-top: 0; margin-bottom: 12px; font-weight: 600;">Dear <strong>' + name + '</strong>,</p>' +
           '<p style="font-size: 14.5px; color: #334155; margin-bottom: 24px; margin-top: 0;">Welcome! Thank you for registering as a <strong>' + regType + '</strong> for <strong>Masters Kerala RE 2.0 EXPO26</strong>. Your spot has been successfully confirmed!</p>' +
 
+          '<!-- OFFICIAL DIGITAL ENTRY QR BADGE CARD -->' +
+          '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ffffff; border: 2px solid #047857; border-radius: 14px; margin-bottom: 26px; overflow: hidden; text-align: center;">' +
+            '<tr>' +
+              '<td style="background: linear-gradient(135deg, #7fee00, #95c841); padding: 12px; color: #0d1117; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">' +
+                '🎟️ OFFICIAL DIGITAL ENTRY BADGE' +
+              '</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td style="padding: 20px;">' +
+                '<p style="margin: 0 0 4px 0; font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Badge ID Number</p>' +
+                '<h3 style="margin: 0 0 14px 0; font-size: 22px; color: #047857; font-family: monospace; font-weight: 800;">' + formattedBadgeId + '</h3>' +
+                '<div style="text-align: center; margin: 12px 0;">' +
+                  '<img src="' + qrImageUrl + '" alt="QR Code Badge" width="180" height="180" style="border: 3px solid #e2e8f0; border-radius: 12px; padding: 6px; background: #fff;" />' +
+                '</div>' +
+                '<p style="font-size: 12.5px; color: #475569; margin: 10px 0 16px 0; font-weight: 500;">📱 Show this QR code on your phone screen at Exhibition entrance for fast entry scanning.</p>' +
+                '<a href="' + badgePageUrl + '" target="_blank" style="background: #047857; color: #ffffff !important; padding: 10px 22px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 13.5px; display: inline-block; box-shadow: 0 3px 10px rgba(4,120,87,0.2);">' +
+                  '🖨️ View & Print Official Badge' +
+                '</a>' +
+              '</td>' +
+            '</tr>' +
+          '</table>' +
+
           '<!-- CONFIRMATION DETAILS CARD -->' +
           '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #047857; border-radius: 12px; margin-bottom: 26px;">' +
             '<tr>' +
               '<td style="padding: 18px 20px;">' +
                 '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size: 14px;">' +
-                  '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600; width: 130px;">Registrant:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">' + name + '</td></tr>' +
+                  '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600; width: 130px;">Badge ID:</td><td style="padding: 6px 0; color: #047857; font-weight: 800; font-family: monospace;">' + formattedBadgeId + '</td></tr>' +
+                  '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Registrant:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">' + name + '</td></tr>' +
                   '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Registration Type:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">' + regType + '</td></tr>' +
                   (company ? ('<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Company / Firm:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">' + company + (designation ? (' (' + designation + ')') : '') + '</td></tr>') : '') +
                   '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Selected Days:</td><td style="padding: 6px 0; color: #047857; font-weight: 800;">' + days + ' (September 2026)</td></tr>' +

@@ -379,7 +379,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxaVzLLwnvmS_QN4tXhxkqraRcy74PnsFLisq_HkOIWhESuxhCk55GDsu76bMeyzCni/exec';
+        var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbza5wOSL2d4AFfiJ_yfveEVzVBn80isT_wpb2C5dkA2rgxlYaQbRF0FC4ZkuupsrF2R/exec';
 
         window.selectedDays = [];
         window.toggleExpoDay = function(btn, day) {
@@ -511,98 +511,109 @@
 
             console.log('🚀 [Visitor Register] Submitting visitor registration form:', Object.fromEntries(formData.entries()));
 
-            // Save to Supabase
-            if (window.expoSupabase) {
-                console.log('💾 [Supabase Visitor] Inserting row into visitor_registrations table...');
-                Promise.resolve(
-                    window.expoSupabase
-                        .from('visitor_registrations')
-                        .insert([{
-                            name: formData.get('name'),
-                            country_code: formData.get('countryCode'),
-                            mobile: formData.get('mobile'),
-                            email: formData.get('email'),
-                            visit_profile: formData.get('visit_profile'),
-                            company_name: formData.get('company_name'),
-                            designation: formData.get('designation'),
-                            address: formData.get('address'),
-                            city: formData.get('city'),
-                            district: formData.get('district'),
-                            state: formData.get('state'),
-                            pincode: formData.get('pincode'),
-                            landmark: formData.get('landmark'),
-                            days: daysStr
-                        }])
-                )
-                .then(res => console.log('✅ [Supabase Visitor] Record saved:', res))
-                .catch(err => console.warn('⚠️ [Supabase Visitor Notice]:', err));
-            }
+            var mobileInput = (formData.get('mobile') || '').trim();
+            var emailInput = (formData.get('email') || '').trim();
 
-            // Submit to Google Sheet Apps Script for Welcome Email & Calendar Add
-            var sheetData = {
-                registration_type: 'Visitor',
-                name: formData.get('name') || '',
-                countryCode: formData.get('countryCode') || '',
-                mobile: formData.get('mobile') || '',
-                email: formData.get('email') || '',
-                city: formData.get('city') || '',
-                district: formData.get('district') || '',
-                state: formData.get('state') || '',
-                visit_profile: formData.get('visit_profile') || '',
-                company_name: formData.get('company_name') || '',
-                designation: formData.get('designation') || '',
-                days: daysStr
-            };
-            submitToGoogleSheet(sheetData);
+            function renderBadgeAndFinish(qrId, badgeNo) {
+                const visitor = {
+                    name:         formData.get('name'),
+                    profile:      formData.get('visit_profile'),
+                    company_name: formData.get('company_name'),
+                    designation:  formData.get('designation'),
+                    city:         formData.get('city'),
+                    mobile_code:  formData.get('countryCode'),
+                    mobile_number:formData.get('mobile')
+                };
 
-            fetch('https://event.rowbest.in/api/master-visitor-reg', {
-                method: 'POST',
-                body: formData
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.status) {
-                    const visitor = {
-                        name:         formData.get('name'),
-                        profile:      formData.get('visit_profile'),
-                        company_name: formData.get('company_name'),
-                        designation:  formData.get('designation'),
-                        city:         formData.get('city'),
-                        mobile_code:  formData.get('countryCode'),
-                        mobile_number:formData.get('mobile')
-                    };
-                    const qrId   = data.id   || data.qr_id   || '';
-                    const badgeNo= data.badge_id || data.badge_no || '';
-                    const url = `badge.html?qr_id=${qrId}&badge_no=${badgeNo}&visitor=${encodeURIComponent(JSON.stringify(visitor))}`;
-                    
-                    document.getElementById('success-name').textContent = formData.get('name') || 'Visitor';
-                    
-                    const email = formData.get('email');
-                    const emailNotice = document.getElementById('pr-email-notice');
-                    if (email) {
-                        document.getElementById('success-email').textContent = email;
-                        emailNotice.style.display = 'flex';
-                    } else {
-                        emailNotice.style.display = 'none';
-                    }
+                // Submit to Google Sheet Apps Script for Welcome Email with QR Badge
+                var sheetData = {
+                    registration_type: 'Visitor',
+                    name: formData.get('name') || '',
+                    countryCode: formData.get('countryCode') || '',
+                    mobile: formData.get('mobile') || '',
+                    email: formData.get('email') || '',
+                    city: formData.get('city') || '',
+                    district: formData.get('district') || '',
+                    state: formData.get('state') || '',
+                    visit_profile: formData.get('visit_profile') || '',
+                    company_name: formData.get('company_name') || '',
+                    designation: formData.get('designation') || '',
+                    days: daysStr,
+                    badge_no: badgeNo,
+                    qr_id: qrId
+                };
+                submitToGoogleSheet(sheetData);
 
-                    generateGCalLinks(activeDays);
-
-                    document.getElementById('generateBadge').href = url;
-                    document.querySelector('.bdg-overlay').classList.add('show');
-                    document.querySelector('.bdg-modal').classList.add('show');
+                const url = `badge.html?qr_id=${qrId}&badge_no=${badgeNo}&visitor=${encodeURIComponent(JSON.stringify(visitor))}`;
+                
+                document.getElementById('success-name').textContent = formData.get('name') || 'Visitor';
+                
+                const email = formData.get('email');
+                const emailNotice = document.getElementById('pr-email-notice');
+                if (email) {
+                    document.getElementById('success-email').textContent = email;
+                    emailNotice.style.display = 'flex';
                 } else {
-                    alert(data.message || data.msg || 'Registration failed. Please check your inputs.');
+                    emailNotice.style.display = 'none';
                 }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Network error. Please check your connection and try again.');
-            })
-            .finally(() => {
+
+                generateGCalLinks(activeDays);
+
+                document.getElementById('generateBadge').href = url;
+                document.querySelector('.bdg-overlay').classList.add('show');
+                document.querySelector('.bdg-modal').classList.add('show');
+                
                 btn.style.display     = 'inline-block';
                 loadBtn.style.display = 'none';
-            });
+
+                // Optional legacy API ping (silent, non-blocking)
+                fetch('https://event.rowbest.in/api/master-visitor-reg', { method: 'POST', body: formData }).catch(() => {});
+            }
+
+            // Duplicate Check & Insert in Supabase
+            if (window.expoSupabase && mobileInput) {
+                var queryFilter = 'mobile.eq.' + mobileInput;
+                if (emailInput) queryFilter += ',email.eq.' + emailInput;
+
+                window.expoSupabase.from('visitor_registrations')
+                    .select('*')
+                    .or(queryFilter)
+                    .then(res => {
+                        if (res.data && res.data.length > 0) {
+                            var existing = res.data[0];
+                            alert('ℹ️ You are already registered for Expo 2026 with mobile: ' + mobileInput + '\n\nOpening your official entry badge...');
+                            renderBadgeAndFinish(existing.id, existing.id);
+                        } else {
+                            // Fresh record insert into Supabase
+                            window.expoSupabase.from('visitor_registrations')
+                                .insert([{
+                                    name: formData.get('name'),
+                                    country_code: formData.get('countryCode'),
+                                    mobile: formData.get('mobile'),
+                                    email: formData.get('email'),
+                                    visit_profile: formData.get('visit_profile'),
+                                    company_name: formData.get('company_name'),
+                                    designation: formData.get('designation'),
+                                    address: formData.get('address'),
+                                    city: formData.get('city'),
+                                    district: formData.get('district'),
+                                    state: formData.get('state'),
+                                    pincode: formData.get('pincode'),
+                                    landmark: formData.get('landmark'),
+                                    days: daysStr
+                                }])
+                                .select()
+                                .then(insRes => {
+                                    var newId = (insRes && insRes.data && insRes.data[0]) ? insRes.data[0].id : String(Date.now()).slice(-4);
+                                    renderBadgeAndFinish(newId, newId);
+                                })
+                                .catch(() => renderBadgeAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4)));
+                        }
+                    })
+                    .catch(() => renderBadgeAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4)));
+            } else {
+                renderBadgeAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4));
+            }
         });
     </script>
 </body>

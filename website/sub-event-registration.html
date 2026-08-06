@@ -284,67 +284,72 @@
             formData.append('company_id',    '12');
             formData.append('exhibition_id', '20');
 
-            console.log('🚀 [Sub-Event Register] Submitting sub-event registration form:', Object.fromEntries(formData.entries()));
+            var mobileInput = (formData.get('mobile') || '').trim();
+            var emailInput = (formData.get('email') || '').trim();
+            var slugVal = formData.get('slug') || 'sub-event';
 
-            // Save to Supabase
-            if (window.expoSupabase) {
-                console.log('💾 [Supabase Sub-Event] Inserting row into sub_event_registrations table...');
-                Promise.resolve(
-                    window.expoSupabase
-                        .from('sub_event_registrations')
-                        .insert([{
-                            event_slug: formData.get('slug'),
-                            name: formData.get('name'),
-                            country_code: formData.get('countryCode'),
-                            mobile: formData.get('mobile'),
-                            email: formData.get('email'),
-                            visit_profile: formData.get('visit_profile'),
-                            company_name: formData.get('company_name'),
-                            designation: formData.get('designation'),
-                            address: formData.get('address'),
-                            city: formData.get('city'),
-                            state: formData.get('state'),
-                            pincode: formData.get('pincode')
-                        }])
-                )
-                .then(res => console.log('✅ [Supabase Sub-Event] Record saved:', res))
-                .catch(err => console.warn('⚠️ [Supabase Sub-Event Notice]:', err));
-            }
+            function renderSubEventBadgeAndFinish(qrId, badgeNo) {
+                const visitor = {
+                    name:          formData.get('name'),
+                    profile:       formData.get('visit_profile'),
+                    company_name:  formData.get('company_name'),
+                    designation:   formData.get('designation'),
+                    city:          formData.get('city'),
+                    mobile_code:   formData.get('countryCode'),
+                    mobile_number: formData.get('mobile')
+                };
 
-            fetch('https://event.rowbest.in/api/sub-event-visitor-reg', {
-                method: 'POST',
-                body: formData
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.status) {
-                    const visitor = {
-                        name:          formData.get('name'),
-                        profile:       formData.get('visit_profile'),
-                        company_name:  formData.get('company_name'),
-                        designation:   formData.get('designation'),
-                        city:          formData.get('city'),
-                        mobile_code:   formData.get('countryCode'),
-                        mobile_number: formData.get('mobile')
-                    };
-                    const qrId    = data.id       || data.qr_id   || '';
-                    const badgeNo = data.badge_id  || data.badge_no || '';
-                    const url = `badge.html?qr_id=${qrId}&badge_no=${badgeNo}&visitor=${encodeURIComponent(JSON.stringify(visitor))}`;
-                    document.getElementById('generateBadge').href = url;
-                    document.querySelector('.bdg-overlay').classList.add('show');
-                    document.querySelector('.bdg-modal').classList.add('show');
-                } else {
-                    alert(data.message || data.msg || 'Registration failed. Please check your inputs.');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Network error. Please check your connection and try again.');
-            })
-            .finally(() => {
+                const url = `badge.html?qr_id=${qrId}&badge_no=${badgeNo}&visitor=${encodeURIComponent(JSON.stringify(visitor))}`;
+                document.getElementById('generateBadge').href = url;
+                document.querySelector('.bdg-overlay').classList.add('show');
+                document.querySelector('.bdg-modal').classList.add('show');
+
                 btn.style.display     = 'inline-block';
                 loadBtn.style.display = 'none';
-            });
+
+                // Optional legacy API ping (silent, non-blocking)
+                fetch('https://event.rowbest.in/api/sub-event-visitor-reg', { method: 'POST', body: formData }).catch(() => {});
+            }
+
+            // Duplicate Check & Insert in Supabase
+            if (window.expoSupabase && mobileInput) {
+                window.expoSupabase.from('sub_event_registrations')
+                    .select('*')
+                    .eq('mobile', mobileInput)
+                    .eq('event_slug', slugVal)
+                    .then(res => {
+                        if (res.data && res.data.length > 0) {
+                            var existing = res.data[0];
+                            alert('ℹ️ You are already registered for this sub-event with mobile: ' + mobileInput + '\n\nOpening your official badge...');
+                            renderSubEventBadgeAndFinish(existing.id, existing.id);
+                        } else {
+                            window.expoSupabase.from('sub_event_registrations')
+                                .insert([{
+                                    event_slug: slugVal,
+                                    name: formData.get('name'),
+                                    country_code: formData.get('countryCode'),
+                                    mobile: formData.get('mobile'),
+                                    email: formData.get('email'),
+                                    visit_profile: formData.get('visit_profile'),
+                                    company_name: formData.get('company_name'),
+                                    designation: formData.get('designation'),
+                                    address: formData.get('address'),
+                                    city: formData.get('city'),
+                                    state: formData.get('state'),
+                                    pincode: formData.get('pincode')
+                                }])
+                                .select()
+                                .then(insRes => {
+                                    var newId = (insRes && insRes.data && insRes.data[0]) ? insRes.data[0].id : String(Date.now()).slice(-4);
+                                    renderSubEventBadgeAndFinish(newId, newId);
+                                })
+                                .catch(() => renderSubEventBadgeAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4)));
+                        }
+                    })
+                    .catch(() => renderSubEventBadgeAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4)));
+            } else {
+                renderSubEventBadgeAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4));
+            }
         });
     </script>
 </body>

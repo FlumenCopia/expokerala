@@ -382,7 +382,7 @@
     </footer>
 
     <script>
-        var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxaVzLLwnvmS_QN4tXhxkqraRcy74PnsFLisq_HkOIWhESuxhCk55GDsu76bMeyzCni/exec';
+        var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbza5wOSL2d4AFfiJ_yfveEVzVBn80isT_wpb2C5dkA2rgxlYaQbRF0FC4ZkuupsrF2R/exec';
 
         window.selectedDays = [];
         window.toggleExpoDay = function(btn, day) {
@@ -483,53 +483,29 @@
 
             console.log('🚀 [Exhibitor Register] Submitting exhibitor registration form:', Object.fromEntries(formData.entries()));
 
-            // Save to Supabase
-            if (window.expoSupabase) {
-                console.log('💾 [Supabase Exhibitor] Inserting row into exhibitor_registrations table...');
-                Promise.resolve(
-                    window.expoSupabase
-                        .from('exhibitor_registrations')
-                        .insert([{
-                            name: formData.get('name'),
-                            designation: formData.get('designation'),
-                            company_name: formData.get('firm_name'),
-                            mobile: formData.get('mobile'),
-                            email: formData.get('email'),
-                            address: formData.get('address'),
-                            pincode: formData.get('pincode'),
-                            city: formData.get('city'),
-                            state: formData.get('state'),
-                            country: formData.get('country'),
-                            days: daysStr
-                        }])
-                )
-                .then(res => console.log('✅ [Supabase Exhibitor] Record saved:', res))
-                .catch(err => console.warn('⚠️ [Supabase Exhibitor Notice]:', err));
-            }
+            var mobileInput = (formData.get('mobile') || '').trim();
+            var emailInput = (formData.get('email') || '').trim();
 
-            // Submit to Google Sheet Apps Script for Exhibitor Welcome Email & Calendar Add
-            var sheetData = {
-                registration_type: 'Exhibitor',
-                name: formData.get('name') || '',
-                mobile: formData.get('mobile') || '',
-                email: formData.get('email') || '',
-                firm_name: formData.get('firm_name') || '',
-                designation: formData.get('designation') || '',
-                city: formData.get('city') || '',
-                state: formData.get('state') || '',
-                country: formData.get('country') || '',
-                days: daysStr
-            };
-            submitToGoogleSheet(sheetData);
-
-            fetch('https://event.rowbest.in/api/master-visitor-reg', {
-                method: 'POST',
-                body: formData
-            })
-            .then(r => r.json())
-            .then(data => {
+            function renderExhibitorSuccessAndFinish(qrId, badgeNo) {
                 const name = formData.get('name') || 'Exhibitor';
                 const email = formData.get('email');
+
+                // Submit to Google Sheet Apps Script for Exhibitor Welcome Email with QR Badge
+                var sheetData = {
+                    registration_type: 'Exhibitor',
+                    name: formData.get('name') || '',
+                    mobile: formData.get('mobile') || '',
+                    email: formData.get('email') || '',
+                    firm_name: formData.get('firm_name') || '',
+                    designation: formData.get('designation') || '',
+                    city: formData.get('city') || '',
+                    state: formData.get('state') || '',
+                    country: formData.get('country') || '',
+                    days: daysStr,
+                    badge_no: badgeNo,
+                    qr_id: qrId
+                };
+                submitToGoogleSheet(sheetData);
 
                 document.getElementById('ex-success-name').textContent = name;
                 const emailNotice = document.getElementById('ex-email-notice');
@@ -545,20 +521,54 @@
                 document.getElementById('ex-success-modal').classList.add('show');
                 document.body.style.overflow = 'hidden';
                 document.getElementById('exhibitorForm').reset();
-            })
-            .catch(err => {
-                console.error(err);
-                // Even if rowbest fails, display success modal if data sent
-                const name = formData.get('name') || 'Exhibitor';
-                document.getElementById('ex-success-name').textContent = name;
-                generateGCalLinks(activeDays);
-                document.getElementById('ex-success-modal').classList.add('show');
-                document.body.style.overflow = 'hidden';
-            })
-            .finally(() => {
+                
                 submitBtn.style.display  = 'block';
                 loadingBtn.style.display = 'none';
-            });
+
+                // Optional legacy API ping (silent, non-blocking)
+                fetch('https://event.rowbest.in/api/master-visitor-reg', { method: 'POST', body: formData }).catch(() => {});
+            }
+
+            // Duplicate Check & Insert in Supabase
+            if (window.expoSupabase && mobileInput) {
+                var queryFilter = 'mobile.eq.' + mobileInput;
+                if (emailInput) queryFilter += ',email.eq.' + emailInput;
+
+                window.expoSupabase.from('exhibitor_registrations')
+                    .select('*')
+                    .or(queryFilter)
+                    .then(res => {
+                        if (res.data && res.data.length > 0) {
+                            var existing = res.data[0];
+                            alert('ℹ️ You are already registered as an Exhibitor with mobile: ' + mobileInput + '\n\nRetrieving your confirmation details...');
+                            renderExhibitorSuccessAndFinish(existing.id, existing.id);
+                        } else {
+                            window.expoSupabase.from('exhibitor_registrations')
+                                .insert([{
+                                    name: formData.get('name'),
+                                    designation: formData.get('designation'),
+                                    company_name: formData.get('firm_name'),
+                                    mobile: formData.get('mobile'),
+                                    email: formData.get('email'),
+                                    address: formData.get('address'),
+                                    pincode: formData.get('pincode'),
+                                    city: formData.get('city'),
+                                    state: formData.get('state'),
+                                    country: formData.get('country'),
+                                    days: daysStr
+                                }])
+                                .select()
+                                .then(insRes => {
+                                    var newId = (insRes && insRes.data && insRes.data[0]) ? insRes.data[0].id : String(Date.now()).slice(-4);
+                                    renderExhibitorSuccessAndFinish(newId, newId);
+                                })
+                                .catch(() => renderExhibitorSuccessAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4)));
+                        }
+                    })
+                    .catch(() => renderExhibitorSuccessAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4)));
+            } else {
+                renderExhibitorSuccessAndFinish(String(Date.now()).slice(-4), String(Date.now()).slice(-4));
+            }
         });
     </script>
 </body>

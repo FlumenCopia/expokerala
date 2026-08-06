@@ -702,7 +702,7 @@
 <script>
 (function () {
 
-    var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxaVzLLwnvmS_QN4tXhxkqraRcy74PnsFLisq_HkOIWhESuxhCk55GDsu76bMeyzCni/exec';
+    var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbza5wOSL2d4AFfiJ_yfveEVzVBn80isT_wpb2C5dkA2rgxlYaQbRF0FC4ZkuupsrF2R/exec';
 
     /* === DAY SELECTOR === */
     window.selectedDays = [];
@@ -918,30 +918,60 @@
             city: city,
             category: cat,
             days: window.selectedDays.join(', '),
+            registration_type: 'Pre-Registration'
         };
 
         console.log('🚀 [Pre-Register] Form submitted with data:', registrationData);
 
-        // Save to Supabase and submit to Google Sheet
-        saveToSupabase(registrationData);
+        function proceedPreRegistration(existingRecordId) {
+            var finalBadgeId = existingRecordId || String(Date.now()).slice(-4);
+            registrationData.badge_no = finalBadgeId;
+            registrationData.qr_id = finalBadgeId;
 
-        console.log('📊 [Google Sheet] Submitting data to Apps Script Web App:', GOOGLE_SHEET_WEB_APP_URL);
-        submitToGoogleSheet(registrationData)
-            .then(function() {
-                console.log('🎉 [Pre-Register] Registration completed successfully for:', name);
-                showSuccess(name, email, window.selectedDays);
-                form.reset();
-                window.selectedDays = [];
-                document.querySelectorAll('.day-btn.active').forEach(function(btn) {
-                    btn.classList.remove('active');
+            if (!existingRecordId) {
+                saveToSupabase(registrationData);
+            }
+
+            console.log('📊 [Google Sheet] Submitting data to Apps Script Web App:', GOOGLE_SHEET_WEB_APP_URL);
+            submitToGoogleSheet(registrationData)
+                .then(function() {
+                    console.log('🎉 [Pre-Register] Registration completed successfully for:', name);
+                    showSuccess(name, email, window.selectedDays);
+                    form.reset();
+                    window.selectedDays = [];
+                    document.querySelectorAll('.day-btn.active').forEach(function(b) {
+                        b.classList.remove('active');
+                    });
+                    resetSubmitButton();
+                })
+                .catch(function(err) {
+                    console.error('❌ [Google Sheet Error]:', err);
+                    alert('Sorry, registration could not be submitted. Please try again.');
+                    resetSubmitButton();
                 });
-                resetSubmitButton();
-            })
-            .catch(function(err) {
-                console.error('❌ [Google Sheet Error]:', err);
-                alert('Sorry, registration could not be submitted. Please try again.');
-                resetSubmitButton();
-            });
+        }
+
+        // Check for existing registration in Supabase
+        if (window.expoSupabase && mobile) {
+            var filter = 'mobile.eq.' + mobile;
+            if (email) filter += ',email.eq.' + email;
+
+            window.expoSupabase.from('pre_registrations')
+                .select('*')
+                .or(filter)
+                .then(function(res) {
+                    if (res.data && res.data.length > 0) {
+                        var existing = res.data[0];
+                        alert('ℹ️ You are already pre-registered for Expo 2026 with mobile: ' + mobile + '\n\nShowing your confirmation details...');
+                        proceedPreRegistration(existing.id);
+                    } else {
+                        proceedPreRegistration(null);
+                    }
+                })
+                .catch(function() { proceedPreRegistration(null); });
+        } else {
+            proceedPreRegistration(null);
+        }
     });
 
     /* === FLOATING PARTICLES === */

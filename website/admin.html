@@ -15,6 +15,8 @@
     <!-- Supabase SDK & Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./script/js/supabase-config.js"></script>
+    <!-- HTML5 QR Code Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <style>
         :root {
@@ -511,6 +513,304 @@
             white-space: pre-wrap;
         }
 
+        /* GATE CONTROL & SCANNER STYLES */
+        .gate-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .gate-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .gate-card-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .gate-card-title i {
+            color: var(--green2);
+        }
+
+        .scanner-container {
+            width: 100%;
+            min-height: 260px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px dashed rgba(127, 238, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #qr-reader { width: 100%; }
+
+        .scan-controls-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .gate-input-group {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .gate-input-group input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .gate-input-group input:focus {
+            border-color: var(--green2);
+            box-shadow: 0 0 10px rgba(127, 238, 0, 0.2);
+        }
+
+        .gate-btn {
+            background: linear-gradient(135deg, var(--green), var(--green2));
+            color: #0d1117;
+            font-weight: 700;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13.5px;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gate-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(127, 238, 0, 0.3);
+        }
+
+        .gate-btn.yellow {
+            background: linear-gradient(135deg, #f5c800, #d4a700);
+            color: #0d1117;
+        }
+
+        .gate-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid var(--card-border);
+        }
+
+        .gate-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .gate-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .gate-metric-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .gate-metric-box .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .gate-metric-box .val {
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .gate-metric-box.green .val { color: var(--green); }
+        .gate-metric-box.yellow .val { color: var(--yellow); }
+        .gate-metric-box.blue .val { color: var(--accent-blue); }
+
+        /* SCANNED ATTENDEE FULL PROFILE CARD */
+        .profile-card-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .status-banner {
+            padding: 14px 20px;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-banner.green {
+            background: rgba(34, 197, 94, 0.2);
+            border-bottom: 2px solid #22c55e;
+            color: #4ade80;
+        }
+
+        .status-banner.yellow {
+            background: rgba(245, 200, 0, 0.2);
+            border-bottom: 2px solid #f5c800;
+            color: #fde047;
+        }
+
+        .status-banner.red {
+            background: rgba(239, 68, 68, 0.2);
+            border-bottom: 2px solid #ef4444;
+            color: #fca5a5;
+        }
+
+        .profile-body {
+            padding: 24px;
+        }
+
+        .profile-header-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--green), var(--green2));
+            color: #0d1117;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .profile-title-block h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .profile-title-block p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        .profile-details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .profile-field-item {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .profile-field-item .lbl {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .profile-field-item .val {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f1f5f9;
+            word-break: break-word;
+        }
+
+        .profile-actions-bar {
+            display: flex;
+            gap: 10px;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+            flex-wrap: wrap;
+        }
+
+        .timeline-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .timeline-section h4 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .timeline-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timeline-item {
+            font-size: 12.5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+        }
+
+        @media (max-width: 992px) {
+            .gate-layout { grid-template-columns: 1fr; }
+            .profile-details-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 576px) {
+            .profile-details-grid { grid-template-columns: 1fr; }
+            .gate-metrics-grid { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 768px) {
             .admin-header {
                 padding: 14px 20px;
@@ -626,6 +926,7 @@
                         Pre-Registrations</button>
                     <button class="tab-btn" onclick="switchTab('sub')"><i class="fa-solid fa-calendar-star"></i>
                         Sub-Events</button>
+                    <button class="tab-btn" onclick="switchTab('gate')"><i class="fa-solid fa-qrcode"></i> QR Gate Scanner</button>
                     <button class="tab-btn" onclick="switchTab('schema')"><i class="fa-solid fa-database"></i> SQL
                         Schema</button>
                 </div>
@@ -648,6 +949,156 @@
                 <div class="table-responsive" id="table-container">
                     <!-- Dynamic Table Content -->
                 </div>
+            </div>
+
+            <!-- GATE CONTROL & QR SCANNER VIEW -->
+            <div id="gate-scanner-view" style="display: none;">
+                
+                <!-- TOP CONTROLS & LIVE METRICS -->
+                <div class="gate-layout">
+                    <!-- SCANNER CARD -->
+                    <div class="gate-card">
+                        <div class="gate-card-title">
+                            <span><i class="fa-solid fa-camera"></i> Live QR Camera & Barcode Scanner</span>
+                            <span class="badge-pill green" id="scanner-status-pill">Ready</span>
+                        </div>
+
+                        <div class="scanner-container">
+                            <div id="qr-reader"></div>
+                            <div id="qr-reader-placeholder" style="text-align:center; padding: 40px; color: var(--text-muted);">
+                                <i class="fa-solid fa-qrcode" style="font-size: 48px; margin-bottom: 12px; color: var(--green2);"></i>
+                                <p>Click <strong>Start Camera</strong> below or scan with a USB Barcode Scanner</p>
+                            </div>
+                        </div>
+
+                        <div class="scan-controls-bar">
+                            <button class="gate-btn" id="btn-start-cam" onclick="startCameraScanner()"><i class="fa-solid fa-play"></i> Start Camera</button>
+                            <button class="gate-btn secondary" id="btn-stop-cam" onclick="stopCameraScanner()" style="display:none;"><i class="fa-solid fa-stop"></i> Stop Camera</button>
+                            <select id="camera-select" style="background: rgba(0,0,0,0.4); color: #fff; border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; font-size: 13px;">
+                                <option value="">Auto-Detect Camera</option>
+                            </select>
+                        </div>
+
+                        <div class="gate-input-group">
+                            <input type="text" id="manual-scan-input" placeholder="Scan QR Code / Enter Badge ID / Phone..." onkeydown="if(event.key==='Enter') triggerManualScan()">
+                            <button class="gate-btn" onclick="triggerManualScan()"><i class="fa-solid fa-magnifying-glass"></i> Scan / Search</button>
+                        </div>
+                    </div>
+
+                    <!-- METRICS & SETTINGS CARD -->
+                    <div class="gate-card">
+                        <div class="gate-card-title">
+                            <span><i class="fa-solid fa-chart-line"></i> Real-Time Gate Metrics</span>
+                            <span style="font-size: 12px; color: var(--text-muted);">Live Sync</span>
+                        </div>
+
+                        <div class="gate-metrics-grid">
+                            <div class="gate-metric-box green">
+                                <div class="label">Inside Venue</div>
+                                <div class="val" id="metric-inside">0</div>
+                            </div>
+                            <div class="gate-metric-box blue">
+                                <div class="label">Total Entries</div>
+                                <div class="val" id="metric-entries">0</div>
+                            </div>
+                            <div class="gate-metric-box yellow">
+                                <div class="label">Total Exits</div>
+                                <div class="val" id="metric-exits">0</div>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(0,0,0,0.25); padding: 14px; border-radius: 12px; border: 1px solid var(--card-border);">
+                            <label style="font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 8px;">Scan Action Mode:</label>
+                            <div style="display: flex; gap: 10px;">
+                                <label style="font-size: 13px; cursor: pointer; color: #fff;"><input type="radio" name="gate-mode" value="AUTO" checked> 🔄 Auto-Toggle (In / Out)</label>
+                                <label style="font-size: 13px; cursor: pointer; color: #fff;"><input type="radio" name="gate-mode" value="ENTRY"> 🟢 Strict Check-In</label>
+                                <label style="font-size: 13px; cursor: pointer; color: #fff;"><input type="radio" name="gate-mode" value="EXIT"> 🟡 Strict Check-Out</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCANNED ATTENDEE FULL PROFILE CARD -->
+                <div class="profile-card-container" id="gate-profile-card">
+                    <div class="status-banner green" id="gate-status-banner">
+                        <span id="banner-text"><i class="fa-solid fa-circle-check"></i> ENTRY GRANTED - INSIDE VENUE</span>
+                        <span style="font-size: 12px; opacity: 0.9;" id="banner-time">09:30 AM</span>
+                    </div>
+
+                    <div class="profile-body">
+                        <div class="profile-header-meta">
+                            <div class="profile-avatar" id="prof-avatar">A</div>
+                            <div class="profile-title-block">
+                                <h3 id="prof-name">Anish Kumar</h3>
+                                <p><span class="badge-pill green" id="prof-type">Visitor</span> &bull; <span id="prof-profile-tag">Solar Engineer</span></p>
+                            </div>
+                        </div>
+
+                        <div class="profile-details-grid">
+                            <div class="profile-field-item">
+                                <div class="lbl">Designation</div>
+                                <div class="val" id="prof-designation">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">Company Name</div>
+                                <div class="val" id="prof-company">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">Mobile Number</div>
+                                <div class="val" id="prof-mobile">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">Email Address</div>
+                                <div class="val" id="prof-email">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">City / District / State</div>
+                                <div class="val" id="prof-location">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">Authorized Days</div>
+                                <div class="val" id="prof-days">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">Badge ID</div>
+                                <div class="val" id="prof-badge-id" style="color: var(--green); font-family: monospace;">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">Current Status</div>
+                                <div class="val" id="prof-status">—</div>
+                            </div>
+                            <div class="profile-field-item">
+                                <div class="lbl">Last Activity</div>
+                                <div class="val" id="prof-last-scan">—</div>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions-bar">
+                            <button class="gate-btn" onclick="forceCheckIn()"><i class="fa-solid fa-right-to-bracket"></i> Check In</button>
+                            <button class="gate-btn yellow" onclick="forceCheckOut()"><i class="fa-solid fa-right-from-bracket"></i> Check Out</button>
+                            <button class="gate-btn secondary" onclick="openScannedBadge()"><i class="fa-solid fa-id-badge"></i> Open Printable Badge</button>
+                        </div>
+
+                        <div class="timeline-section">
+                            <h4><i class="fa-solid fa-clock-rotate-left"></i> Attendee Scan History Timeline</h4>
+                            <div class="timeline-list" id="prof-timeline-list">
+                                <div class="timeline-item">No previous activity recorded.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECENT GATE AUDIT LOG TABLE -->
+                <div class="table-card">
+                    <div class="gate-card-title" style="padding: 16px 20px 0;">
+                        <span><i class="fa-solid fa-list-check"></i> Recent Gate Scans Audit Log</span>
+                        <button class="action-btn" onclick="fetchGateAuditLogs()"><i class="fa-solid fa-rotate"></i> Refresh Log</button>
+                    </div>
+                    <div class="table-responsive" id="gate-audit-table-container">
+                        <!-- Dynamic Gate Audit Table -->
+                    </div>
+                </div>
+
             </div>
 
             <!-- SQL SCHEMA VIEW -->
@@ -752,18 +1203,536 @@
         function switchTab(tab) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(function (btn) { btn.classList.remove('active'); });
-            event.currentTarget.classList.add('active');
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+            var tableCard = document.getElementById('table-card');
+            var tableControls = document.getElementById('table-controls');
+            var schemaView = document.getElementById('schema-view');
+            var gateView = document.getElementById('gate-scanner-view');
 
             if (tab === 'schema') {
-                document.getElementById('table-card').style.display = 'none';
-                document.getElementById('table-controls').style.display = 'none';
-                document.getElementById('schema-view').style.display = 'block';
+                if (tableCard) tableCard.style.display = 'none';
+                if (tableControls) tableControls.style.display = 'none';
+                if (gateView) gateView.style.display = 'none';
+                if (schemaView) schemaView.style.display = 'block';
+            } else if (tab === 'gate') {
+                if (tableCard) tableCard.style.display = 'none';
+                if (tableControls) tableControls.style.display = 'none';
+                if (schemaView) schemaView.style.display = 'none';
+                if (gateView) gateView.style.display = 'block';
+                initGateModule();
             } else {
-                document.getElementById('table-card').style.display = 'block';
-                document.getElementById('table-controls').style.display = 'flex';
-                document.getElementById('schema-view').style.display = 'none';
+                if (tableCard) tableCard.style.display = 'block';
+                if (tableControls) tableControls.style.display = 'flex';
+                if (schemaView) schemaView.style.display = 'none';
+                if (gateView) gateView.style.display = 'none';
                 renderTable();
             }
+        }
+
+        // =========================================================================
+        // GATE SCANNER & ATTENDEE FULL PROFILE ENGINE
+        // =========================================================================
+        var html5QrcodeScanner = null;
+        var currentScannedAttendee = null;
+
+        function initGateModule() {
+            fetchGateMetrics();
+            fetchGateAuditLogs();
+            populateCameraList();
+            // Focus manual scan input
+            var input = document.getElementById('manual-scan-input');
+            if (input) setTimeout(function() { input.focus(); }, 300);
+        }
+
+        function populateCameraList() {
+            if (typeof Html5Qrcode === 'undefined') return;
+            Html5Qrcode.getCameras().then(function(devices) {
+                var select = document.getElementById('camera-select');
+                if (!select) return;
+                select.innerHTML = '<option value="">Auto-Detect Camera</option>';
+                if (devices && devices.length) {
+                    devices.forEach(function(device) {
+                        var opt = document.createElement('option');
+                        opt.value = device.id;
+                        opt.textContent = device.label || ('Camera ' + device.id);
+                        select.appendChild(opt);
+                    });
+                }
+            }).catch(function(err) {
+                console.warn('⚠️ [Gate Scanner] Could not list cameras:', err);
+            });
+        }
+
+        var lastScannedCode = '';
+        var lastScanTimestamp = 0;
+
+        function startCameraScanner() {
+            if (typeof Html5Qrcode === 'undefined') {
+                alert('HTML5 QR Code library loading... Please check internet connection.');
+                return;
+            }
+            if (html5QrcodeScanner) { stopCameraScanner(); }
+
+            document.getElementById('qr-reader-placeholder').style.display = 'none';
+            document.getElementById('btn-start-cam').style.display = 'none';
+            document.getElementById('btn-stop-cam').style.display = 'inline-flex';
+            document.getElementById('scanner-status-pill').textContent = 'Camera Active';
+
+            var selectedCamId = document.getElementById('camera-select').value;
+            var cameraIdOrConfig = selectedCamId ? selectedCamId : { facingMode: "environment" };
+
+            html5QrcodeScanner = new Html5Qrcode("qr-reader");
+            html5QrcodeScanner.start(
+                cameraIdOrConfig,
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                function (decodedText) {
+                    var now = Date.now();
+                    if (decodedText === lastScannedCode && (now - lastScanTimestamp) < 3000) {
+                        return; // Cooldown 3s for same QR code
+                    }
+                    lastScannedCode = decodedText;
+                    lastScanTimestamp = now;
+
+                    console.log('📸 [Gate Scanner] QR Code detected:', decodedText);
+                    processScanCode(decodedText);
+                },
+                function (errorMessage) { /* silent frame errors */ }
+            ).catch(function(err) {
+                console.error('⚠️ [Gate Scanner] Error starting camera:', err);
+                alert('Could not start camera: ' + (err.message || err));
+                stopCameraScanner();
+            });
+        }
+
+        function stopCameraScanner() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.stop().then(function() {
+                    html5QrcodeScanner.clear();
+                    html5QrcodeScanner = null;
+                }).catch(function(err) { console.warn(err); });
+            }
+            document.getElementById('qr-reader-placeholder').style.display = 'block';
+            document.getElementById('btn-start-cam').style.display = 'inline-flex';
+            document.getElementById('btn-stop-cam').style.display = 'none';
+            document.getElementById('scanner-status-pill').textContent = 'Ready';
+        }
+
+        function triggerManualScan() {
+            var input = document.getElementById('manual-scan-input');
+            var val = (input.value || '').trim();
+            if (!val) return;
+            processScanCode(val);
+            input.value = '';
+        }
+
+        // Web Audio API Tones
+        function playAudioBeep(success) {
+            try {
+                var ctx = new (window.AudioContext || window.webkitAudioContext)();
+                var osc = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (success) {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.15);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.35);
+                }
+            } catch(e) { /* ignore audio context restrictions */ }
+        }
+
+        // ROBUST PAYLOAD PARSER
+        function parseScanPayload(rawCode) {
+            var str = String(rawCode || '').trim();
+            var res = { raw: str, type: null, id: null, badgeId: null, mobile: null };
+
+            // Format 1: EXPO26:TYPE:ID:BADGE_NO:MOBILE
+            if (str.indexOf('EXPO26:') === 0) {
+                var parts = str.split(':');
+                if (parts[1]) res.type = parts[1].toLowerCase();
+                if (parts[2] && !isNaN(parts[2])) res.id = parseInt(parts[2], 10);
+                if (parts[3]) res.badgeId = parts[3];
+                if (parts[4]) res.mobile = parts[4].replace(/\D/g, '');
+                return res;
+            }
+
+            // Format 2: URL containing qr_id=142 or badge_no=142
+            if (str.includes('badge.html') || str.includes('qr_id=')) {
+                try {
+                    var u = new URL(str.indexOf('http') === 0 ? str : ('http://x/' + str));
+                    var q = u.searchParams.get('qr_id');
+                    var b = u.searchParams.get('badge_no');
+                    if (q && !isNaN(q)) res.id = parseInt(q, 10);
+                    if (b) res.badgeId = 'ReExpo2026/' + String(b).padStart(4, '0');
+                    return res;
+                } catch(e) {}
+            }
+
+            // Format 3: ReExpo2026/0142
+            if (str.toLowerCase().includes('reexpo2026/')) {
+                res.badgeId = str;
+                var num = str.replace(/\D/g, '');
+                if (num) res.id = parseInt(num, 10);
+                return res;
+            }
+
+            // Format 4: Pure digits
+            var digits = str.replace(/\D/g, '');
+            if (digits.length >= 7) {
+                res.mobile = digits;
+            } else if (digits.length > 0) {
+                res.id = parseInt(digits, 10);
+            }
+
+            return res;
+        }
+
+        // PARSE & PROCESS QR SCAN CODE
+        function processScanCode(rawCode) {
+            console.log('🔍 [Gate Scanner] Processing scan input:', rawCode);
+            var parsed = parseScanPayload(rawCode);
+            console.log('📦 [Gate Scanner] Parsed payload:', parsed);
+
+            // Match in local cache first
+            var match = findAttendeeInCache(parsed);
+
+            if (match) {
+                executeGateScan(match);
+            } else {
+                // Query Supabase directly
+                queryDatabaseForAttendee(parsed, function(foundRecord) {
+                    if (foundRecord) {
+                        executeGateScan(foundRecord);
+                    } else {
+                        playAudioBeep(false);
+                        renderUnregisteredProfile(rawCode);
+                    }
+                });
+            }
+        }
+
+        function findAttendeeInCache(parsed) {
+            var all = [].concat(
+                cachedData.visitor.map(function(r){ return Object.assign({}, r, { _type: 'visitor', _tableName: 'visitor_registrations' }); }),
+                cachedData.exhibitor.map(function(r){ return Object.assign({}, r, { _type: 'exhibitor', _tableName: 'exhibitor_registrations' }); }),
+                cachedData.pre.map(function(r){ return Object.assign({}, r, { _type: 'pre', _tableName: 'pre_registrations' }); }),
+                cachedData.sub.map(function(r){ return Object.assign({}, r, { _type: 'sub', _tableName: 'sub_event_registrations' }); })
+            );
+
+            return all.find(function(r) {
+                if (parsed.id && parseInt(r.id, 10) === parsed.id) return true;
+                if (parsed.badgeId && ('ReExpo2026/' + String(r.id).padStart(4, '0')).toLowerCase() === parsed.badgeId.toLowerCase()) return true;
+                if (parsed.mobile && r.mobile) {
+                    var rMob = String(r.mobile).replace(/\D/g, '');
+                    if (rMob && rMob.includes(parsed.mobile)) return true;
+                }
+                var rawLow = parsed.raw.toLowerCase();
+                return rawLow.includes(String(r.id)) || (r.name && rawLow.includes(r.name.toLowerCase()));
+            });
+        }
+
+        function queryDatabaseForAttendee(parsed, callback) {
+            var db = window.expoSupabaseAdmin || window.expoSupabase;
+            if (!db) { callback(null); return; }
+
+            var promises = [];
+
+            if (parsed.id) {
+                promises.push(db.from('visitor_registrations').select('*').eq('id', parsed.id));
+                promises.push(db.from('exhibitor_registrations').select('*').eq('id', parsed.id));
+                promises.push(db.from('pre_registrations').select('*').eq('id', parsed.id));
+                promises.push(db.from('sub_event_registrations').select('*').eq('id', parsed.id));
+            }
+
+            if (parsed.mobile) {
+                promises.push(db.from('visitor_registrations').select('*').ilike('mobile', '%' + parsed.mobile + '%'));
+                promises.push(db.from('exhibitor_registrations').select('*').ilike('mobile', '%' + parsed.mobile + '%'));
+                promises.push(db.from('pre_registrations').select('*').ilike('mobile', '%' + parsed.mobile + '%'));
+            }
+
+            if (promises.length === 0) {
+                promises.push(db.from('visitor_registrations').select('*').or('mobile.ilike.%' + parsed.raw + '%,name.ilike.%' + parsed.raw + '%'));
+            }
+
+            Promise.all(promises).then(function(results) {
+                var found = null;
+                results.forEach(function(res, idx) {
+                    if (res && res.data && res.data.length > 0 && !found) {
+                        var row = res.data[0];
+                        var tableNames = ['visitor_registrations', 'exhibitor_registrations', 'pre_registrations', 'sub_event_registrations'];
+                        var types = ['visitor', 'exhibitor', 'pre', 'sub'];
+                        found = Object.assign({}, row, { _type: types[idx % 4], _tableName: tableNames[idx % 4] });
+                    }
+                });
+                callback(found);
+            }).catch(function(err) {
+                console.warn('⚠️ DB search error:', err);
+                callback(null);
+            });
+        }
+
+        function executeGateScan(attendee) {
+            currentScannedAttendee = attendee;
+
+            // Determine scan action mode
+            var modeRadio = document.querySelector('input[name="gate-mode"]:checked');
+            var selectedMode = modeRadio ? modeRadio.value : 'AUTO';
+
+            var currentStatus = attendee.status || 'REGISTERED';
+            var nextAction = 'ENTRY';
+
+            if (selectedMode === 'AUTO') {
+                nextAction = (currentStatus === 'INSIDE') ? 'EXIT' : 'ENTRY';
+            } else if (selectedMode === 'EXIT') {
+                nextAction = 'EXIT';
+            } else {
+                nextAction = 'ENTRY';
+            }
+
+            var nextStatus = (nextAction === 'ENTRY') ? 'INSIDE' : 'CHECKED_OUT';
+            var nowIso = new Date().toISOString();
+            var badgeId = 'ReExpo2026/' + String(attendee.id).padStart(4, '0');
+
+            // 1. Update Supabase record status & timestamp
+            var db = window.expoSupabaseAdmin || window.expoSupabase;
+            if (db && attendee._tableName && attendee.id) {
+                var updatePayload = { status: nextStatus };
+                if (nextAction === 'ENTRY') updatePayload.last_entry_at = nowIso;
+                else updatePayload.last_exit_at = nowIso;
+
+                db.from(attendee._tableName).update(updatePayload).eq('id', attendee.id)
+                    .then(function() {
+                        attendee.status = nextStatus;
+                        console.log('✅ Status updated in DB:', nextStatus);
+                        fetchAllData();
+                    });
+
+                // 2. Insert into entry_exit_logs
+                db.from('entry_exit_logs').insert([{
+                    registration_type: attendee._type || 'visitor',
+                    registration_id: attendee.id,
+                    badge_id: badgeId,
+                    attendee_name: attendee.name,
+                    mobile: attendee.mobile || '',
+                    action: nextAction,
+                    scanned_by: 'Gate Super Admin',
+                    gate_name: 'Main Gate'
+                }]).then(function() {
+                    fetchGateMetrics();
+                    fetchGateAuditLogs();
+                });
+            }
+
+            // 3. Play audio chime
+            playAudioBeep(true);
+
+            // 4. Render Full Attendee Profile Card
+            renderAttendeeProfileCard(attendee, nextAction, nextStatus);
+        }
+
+        function renderAttendeeProfileCard(r, action, status) {
+            var card = document.getElementById('gate-profile-card');
+            var banner = document.getElementById('gate-status-banner');
+            var bannerText = document.getElementById('banner-text');
+            var bannerTime = document.getElementById('banner-time');
+
+            card.style.display = 'block';
+
+            var nowStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            bannerTime.textContent = nowStr;
+
+            if (status === 'INSIDE') {
+                banner.className = 'status-banner green';
+                bannerText.innerHTML = '<i class="fa-solid fa-circle-check"></i> ENTRY GRANTED &bull; ATTENDEE INSIDE VENUE';
+            } else {
+                banner.className = 'status-banner yellow';
+                bannerText.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> CHECKED OUT &bull; ATTENDEE EXITED VENUE';
+            }
+
+            var initial = (r.name || 'A').charAt(0).toUpperCase();
+            document.getElementById('prof-avatar').textContent = initial;
+            document.getElementById('prof-name').textContent = r.name || 'Attendee';
+            document.getElementById('prof-type').textContent = (r._type || 'visitor').toUpperCase();
+            document.getElementById('prof-profile-tag').textContent = r.visit_profile || r.category || 'Expo Visitor';
+
+            document.getElementById('prof-designation').textContent = r.designation || '—';
+            document.getElementById('prof-company').textContent = r.company_name || '—';
+
+            var mob = (r.country_code ? '+' + r.country_code + ' ' : '') + (r.mobile || '—');
+            document.getElementById('prof-mobile').innerHTML = escapeHtml(mob) + (r.mobile ? ' <a href="tel:' + r.mobile + '" style="color:var(--green); margin-left:6px;"><i class="fa-solid fa-phone"></i> Call</a>' : '');
+            document.getElementById('prof-email').textContent = r.email || '—';
+
+            var loc = [r.city, r.district, r.state, r.pincode].filter(Boolean).join(', ');
+            document.getElementById('prof-location').textContent = loc || '—';
+
+            document.getElementById('prof-days').textContent = r.days || 'Sep 25, Sep 26, Sep 27';
+
+            var badgeId = 'ReExpo2026/' + String(r.id).padStart(4, '0');
+            document.getElementById('prof-badge-id').textContent = badgeId;
+
+            document.getElementById('prof-status').innerHTML = (status === 'INSIDE') ?
+                '<span class="badge-pill green">INSIDE VENUE</span>' :
+                '<span class="badge-pill yellow">CHECKED OUT</span>';
+
+            document.getElementById('prof-last-scan').textContent = action + ' at ' + nowStr;
+
+            fetchAttendeeTimeline(r.id, r._type);
+        }
+
+        function renderUnregisteredProfile(code) {
+            var card = document.getElementById('gate-profile-card');
+            var banner = document.getElementById('gate-status-banner');
+            var bannerText = document.getElementById('banner-text');
+            var bannerTime = document.getElementById('banner-time');
+
+            card.style.display = 'block';
+
+            banner.className = 'status-banner red';
+            bannerText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> UNREGISTERED / INVALID BADGE ID';
+            bannerTime.textContent = new Date().toLocaleTimeString();
+
+            document.getElementById('prof-avatar').textContent = '?';
+            document.getElementById('prof-name').textContent = 'Unknown Attendee / Unregistered';
+            document.getElementById('prof-type').textContent = 'NOT FOUND';
+            document.getElementById('prof-profile-tag').textContent = 'No matching registration';
+
+            document.getElementById('prof-designation').textContent = '—';
+            document.getElementById('prof-company').textContent = '—';
+            document.getElementById('prof-mobile').textContent = code;
+            document.getElementById('prof-email').textContent = '—';
+            document.getElementById('prof-location').textContent = '—';
+            document.getElementById('prof-days').textContent = '—';
+            document.getElementById('prof-badge-id').textContent = code;
+            document.getElementById('prof-status').innerHTML = '<span class="badge-pill yellow" style="background:rgba(239,68,68,0.2);color:#ef4444;">UNAUTHORIZED</span>';
+            document.getElementById('prof-last-scan').textContent = 'Attempted scan at ' + new Date().toLocaleTimeString();
+
+            document.getElementById('prof-timeline-list').innerHTML = '<div class="timeline-item" style="color:var(--accent-red);">No registration found in Supabase database for code: <strong>' + escapeHtml(code) + '</strong></div>';
+        }
+
+        function forceCheckIn() {
+            if (currentScannedAttendee) {
+                executeGateScan(Object.assign({}, currentScannedAttendee, { status: 'CHECKED_OUT' }));
+            }
+        }
+
+        function forceCheckOut() {
+            if (currentScannedAttendee) {
+                executeGateScan(Object.assign({}, currentScannedAttendee, { status: 'INSIDE' }));
+            }
+        }
+
+        function openScannedBadge() {
+            if (!currentScannedAttendee) return;
+            var qrId = currentScannedAttendee.id;
+            var badgeNo = currentScannedAttendee.id;
+            var visitorObj = {
+                name: currentScannedAttendee.name || '',
+                profile: currentScannedAttendee.visit_profile || currentScannedAttendee.category || '',
+                company_name: currentScannedAttendee.company_name || '',
+                designation: currentScannedAttendee.designation || '',
+                city: currentScannedAttendee.city || '',
+                mobile_number: currentScannedAttendee.mobile || ''
+            };
+            var url = 'badge.html?qr_id=' + qrId + '&badge_no=' + badgeNo + '&visitor=' + encodeURIComponent(JSON.stringify(visitorObj));
+            window.open(url, '_blank');
+        }
+
+        function fetchAttendeeTimeline(regId, type) {
+            var listEl = document.getElementById('prof-timeline-list');
+            var db = window.expoSupabaseAdmin || window.expoSupabase;
+            if (!db) { listEl.innerHTML = '<div class="timeline-item">No scan logs available.</div>'; return; }
+
+            db.from('entry_exit_logs').select('*')
+                .eq('registration_id', regId)
+                .order('created_at', { ascending: false })
+                .then(function(res) {
+                    var logs = (res && res.data) ? res.data : [];
+                    if (logs.length === 0) {
+                        listEl.innerHTML = '<div class="timeline-item">First scan today — no prior history.</div>';
+                        return;
+                    }
+                    var html = '';
+                    logs.forEach(function(l) {
+                        var actClass = l.action === 'ENTRY' ? 'green' : 'yellow';
+                        html += '<div class="timeline-item">' +
+                            '<span><span class="badge-pill ' + actClass + '">' + escapeHtml(l.action) + '</span> at ' + formatDate(l.created_at) + '</span>' +
+                            '<span style="color:var(--text-muted);">' + escapeHtml(l.gate_name || 'Main Gate') + ' (' + escapeHtml(l.scanned_by || 'Admin') + ')</span>' +
+                            '</div>';
+                    });
+                    listEl.innerHTML = html;
+                });
+        }
+
+        function fetchGateMetrics() {
+            var db = window.expoSupabaseAdmin || window.expoSupabase;
+            if (!db) return;
+
+            // 1. Calculate Inside Venue Count from visitor & exhibitor & pre & sub tables
+            Promise.all([
+                db.from('visitor_registrations').select('id', { count: 'exact' }).eq('status', 'INSIDE'),
+                db.from('exhibitor_registrations').select('id', { count: 'exact' }).eq('status', 'INSIDE'),
+                db.from('pre_registrations').select('id', { count: 'exact' }).eq('status', 'INSIDE'),
+                db.from('sub_event_registrations').select('id', { count: 'exact' }).eq('status', 'INSIDE'),
+                db.from('entry_exit_logs').select('id', { count: 'exact' }).eq('action', 'ENTRY'),
+                db.from('entry_exit_logs').select('id', { count: 'exact' }).eq('action', 'EXIT')
+            ]).then(function(res) {
+                var insideCount = (res[0].count || 0) + (res[1].count || 0) + (res[2].count || 0) + (res[3].count || 0);
+                var totalEntries = res[4].count || 0;
+                var totalExits = res[5].count || 0;
+
+                var elInside = document.getElementById('metric-inside');
+                var elEntries = document.getElementById('metric-entries');
+                var elExits = document.getElementById('metric-exits');
+
+                if (elInside) elInside.textContent = insideCount;
+                if (elEntries) elEntries.textContent = totalEntries;
+                if (elExits) elExits.textContent = totalExits;
+            }).catch(function(err) { console.warn(err); });
+        }
+
+        function fetchGateAuditLogs() {
+            var container = document.getElementById('gate-audit-table-container');
+            if (!container) return;
+
+            var db = window.expoSupabaseAdmin || window.expoSupabase;
+            if (!db) return;
+
+            db.from('entry_exit_logs').select('*').order('created_at', { ascending: false }).limit(50)
+                .then(function(res) {
+                    var list = (res && res.data) ? res.data : [];
+                    if (list.length === 0) {
+                        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-clipboard-list"></i><p>No gate scans recorded yet.</p></div>';
+                        return;
+                    }
+                    var html = '<table><thead><tr>' +
+                        '<th>Timestamp</th><th>Action</th><th>Badge ID</th><th>Attendee Name</th><th>Mobile</th><th>Type</th><th>Gate</th>' +
+                        '</tr></thead><tbody>';
+
+                    list.forEach(function(r) {
+                        var pillClass = (r.action === 'ENTRY') ? 'green' : 'yellow';
+                        html += '<tr>' +
+                            '<td>' + formatDate(r.created_at) + '</td>' +
+                            '<td><span class="badge-pill ' + pillClass + '">' + escapeHtml(r.action) + '</span></td>' +
+                            '<td><strong style="color:var(--green); font-family:monospace;">' + escapeHtml(r.badge_id || '—') + '</strong></td>' +
+                            '<td><strong>' + escapeHtml(r.attendee_name) + '</strong></td>' +
+                            '<td>' + escapeHtml(r.mobile || '—') + '</td>' +
+                            '<td><span class="badge-pill blue">' + escapeHtml(r.registration_type || 'visitor') + '</span></td>' +
+                            '<td>' + escapeHtml(r.gate_name || 'Main Gate') + '</td>' +
+                            '</tr>';
+                    });
+                    html += '</tbody></table>';
+                    container.innerHTML = html;
+                });
         }
 
         // SEARCH & FILTERING
