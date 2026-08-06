@@ -1706,34 +1706,40 @@ top: 0 ;
 .vist-input button {
     background: linear-gradient(135deg, #7fee00, #95c841);
     border: none;
-    color: #ffffff;
-    padding: 20px;
-    border-radius: 30px;
+    color: #ffffff !important;
+    padding: 10px 16px;
+    border-radius: 6px;
     width: 100%;
     display: block;
-    margin: 18px 0;
+    margin: 12px 0;
     cursor: pointer;
-    transition: all 0.3s;
-    font-size: 15px;
+    transition: all 0.3s ease;
+    font-size: 14px;
     font-weight: 700;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     text-align: center;
+    font-family: 'Inter', sans-serif, system-ui;
+    box-shadow: 0 3px 10px rgba(127, 238, 0, 0.3);
 }
 
 .vist-input button:disabled {
-    background-color: #9e9e9e;
-    color: #fff;
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 .vist-input button:hover:disabled {
-    background-color: #9e9e9e;
-    color: #fff;
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
 }
 
 .vist-input button:hover {
     background: linear-gradient(135deg, #95c841, #7fee00);
-    color: #ffffff;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(127, 238, 0, 0.45);
 }
 
 .visit-cont-blk {

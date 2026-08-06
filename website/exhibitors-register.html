@@ -60,35 +60,38 @@
         .ex-reg-blk .form-input input:focus,
         .ex-reg-blk .form-input select:focus { border-color: #7fee00; }
         .ex-reg-blk .submit-btn {
-            padding: 12px 20px; background: linear-gradient(135deg, #7fee00, #95c841);
+            padding: 10px 16px; background: linear-gradient(135deg, #7fee00, #95c841);
             display: block; width: 100%; border-radius: 6px;
-            border: none; color: #0d1117; margin-top: 16px;
-            cursor: pointer; transition: all 0.3s; font-family: var(--text-font);
-            font-size: 16px; font-weight: 700;
+            border: none; color: #ffffff !important; margin-top: 12px;
+            cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif, system-ui;
+            font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(127, 238, 0, 0.3);
         }
-        .ex-reg-blk .submit-btn:hover { background: linear-gradient(135deg, #95c841, #7fee00); color: #0d1117; }
+        .ex-reg-blk .submit-btn:hover { background: linear-gradient(135deg, #95c841, #7fee00); color: #ffffff !important; }
         .ex-reg-blk h2 { margin-bottom: 24px; color: #243546; }
 
         /* Day Selector */
-        .day-selector { display: flex; gap: 8px; margin-top: 6px; margin-bottom: 14px; }
+        .day-selector { display: flex; gap: 6px; margin-top: 6px; margin-bottom: 12px; }
         .day-btn {
             flex: 1;
-            background: rgba(0,0,0,0.04);
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 8px 6px;
-            color: #4a5568;
-            font-size: 12px;
-            font-family: inherit;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 4px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif, system-ui;
             cursor: pointer;
             text-align: center;
             transition: all 0.25s ease;
         }
-        .day-btn strong { display: block; font-size: 15px; color: #1a202c; margin-bottom: 2px; }
+        .day-btn strong { display: block; font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 1px; font-family: 'Inter', sans-serif, system-ui; }
         .day-btn * { pointer-events: none; }
-        .day-btn:hover { border-color: #7fee00; color: #1a202c; }
-        .day-btn.active { background: rgba(3,150,35,0.12); border-color: #047857; color: #047857; }
-        .day-btn.active strong { color: #047857; }
+        .day-btn:hover { border-color: #7fee00; color: #1e293b; background: #f0fdf4; }
+        .day-btn:hover strong { color: #1e293b; }
+        .day-btn.active { background: linear-gradient(135deg, #7fee00, #95c841); border-color: #7fee00; color: #ffffff !important; font-weight: 700; box-shadow: 0 3px 10px rgba(127,238,0,0.3); }
+        .day-btn.active strong { color: #ffffff !important; }
 
         /* Success Overlay Modal */
         #ex-success-modal {

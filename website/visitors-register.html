@@ -45,25 +45,27 @@
     /></noscript>
     <!-- End Meta Pixel Code -->
     <style>
-        .day-selector { display: flex; gap: 8px; margin-top: 6px; margin-bottom: 14px; }
+        .day-selector { display: flex; gap: 6px; margin-top: 6px; margin-bottom: 12px; }
         .day-btn {
             flex: 1;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 8px;
-            padding: 8px 6px;
-            color: #a0aec0;
-            font-size: 12px;
-            font-family: inherit;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 4px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif, system-ui;
             cursor: pointer;
             text-align: center;
             transition: all 0.25s ease;
         }
-        .day-btn strong { display: block; font-size: 15px; color: #fff; margin-bottom: 2px; }
+        .day-btn strong { display: block; font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 1px; font-family: 'Inter', sans-serif, system-ui; }
         .day-btn * { pointer-events: none; }
-        .day-btn:hover { border-color: rgba(3,150,35,0.5); color: #fff; }
-        .day-btn.active { background: rgba(3,150,35,0.18); border-color: #7fee00; color: #95c841; }
-        .day-btn.active strong { color: #95c841; }
+        .day-btn:hover { border-color: #7fee00; color: #1e293b; background: #f0fdf4; }
+        .day-btn:hover strong { color: #1e293b; }
+        .day-btn.active { background: linear-gradient(135deg, #7fee00, #95c841); border-color: #7fee00; color: #ffffff !important; font-weight: 700; box-shadow: 0 3px 10px rgba(127,238,0,0.3); }
+        .day-btn.active strong { color: #ffffff !important; }
 
         .pr-email-notice {
             display: flex;
