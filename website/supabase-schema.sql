@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS public.visitor_registrations (
     district TEXT,
     state TEXT,
     pincode TEXT,
-    landmark TEXT
+    landmark TEXT,
+    days TEXT
 );
 
 -- 3. Exhibitor Registrations Table
@@ -48,8 +49,13 @@ CREATE TABLE IF NOT EXISTS public.exhibitor_registrations (
     pincode TEXT,
     city TEXT,
     state TEXT,
-    country TEXT
+    country TEXT,
+    days TEXT
 );
+
+-- Schema Migrations (if tables already exist)
+ALTER TABLE public.visitor_registrations ADD COLUMN IF NOT EXISTS days TEXT;
+ALTER TABLE public.exhibitor_registrations ADD COLUMN IF NOT EXISTS days TEXT;
 
 -- 4. Sub-Event Registrations Table
 CREATE TABLE IF NOT EXISTS public.sub_event_registrations (

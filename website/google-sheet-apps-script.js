@@ -48,13 +48,16 @@ function doPost(e) {
     var mobile = (countryCode ? '+' + countryCode + ' ' : '') + sanitizeString(data.mobile || data.Mobile || data['MOBILE NUMBER']);
     var email = sanitizeString(data.email || data.Email || data['EMAIL ADDRESS']);
     var city = sanitizeString(data.city || data.City || data['CITY / DISTRICT']);
-    var category = sanitizeString(data.category || data.Category || data['I AM A']);
-    var days = sanitizeString(data.days || data.Days || data['WHICH DAY(S) WILL YOU ATTEND?']);
+    var category = sanitizeString(data.category || data.Category || data.visit_profile || data['I AM A'] || 'Visitor');
+    var days = sanitizeString(data.days || data.Days || data['WHICH DAY(S) WILL YOU ATTEND?'] || 'Sep 25, Sep 26, Sep 27');
+    var regType = sanitizeString(data.registration_type || data.regType || (data.firm_name ? 'Exhibitor' : 'Visitor'));
+    var company = sanitizeString(data.company_name || data.firm_name || data.company || '');
+    var designation = sanitizeString(data.designation || '');
 
     // 3. Send INSTANT WELCOME & CONFIRMATION EMAIL to form submitter
     var emailStatus = "No email address found in form submission";
     if (email && email.indexOf('@') !== -1) {
-      emailStatus = sendInstantWelcomeEmail(name, email, days, city, category);
+      emailStatus = sendInstantWelcomeEmail(name, email, days, city, category, regType, company, designation);
     }
 
     return ContentService
@@ -100,21 +103,27 @@ function record_data(e) {
     }
 
     var timestamp = new Date();
+    var regType = getVal('registration_type') || (getVal('firm_name') ? 'Exhibitor' : 'Visitor');
     var name = getVal('name') || getVal('Name') || getVal('FULL NAME');
     var countryCode = getVal('countryCode');
     var mobile = (countryCode ? '+' + countryCode + ' ' : '') + (getVal('mobile') || getVal('Mobile') || getVal('MOBILE NUMBER'));
     var email = getVal('email') || getVal('Email') || getVal('EMAIL ADDRESS');
     var city = getVal('city') || getVal('City') || getVal('CITY / DISTRICT');
-    var category = getVal('category') || getVal('Category') || getVal('I AM A');
-    var days = getVal('days') || getVal('Days') || getVal('WHICH DAY(S) WILL YOU ATTEND?');
+    var category = getVal('category') || getVal('visit_profile') || getVal('Category') || getVal('I AM A') || regType;
+    var days = getVal('days') || getVal('Days') || getVal('WHICH DAY(S) WILL YOU ATTEND?') || 'Sep 25, Sep 26, Sep 27';
+    var company = getVal('company_name') || getVal('firm_name') || '';
+    var designation = getVal('designation') || '';
 
     sheet.appendRow([
       timestamp,
+      regType,
       name,
       mobile,
       email,
       city,
       category,
+      company,
+      designation,
       days
     ]);
 
@@ -193,18 +202,20 @@ function generateIcsCalendar(name, email, daysString) {
 /**
  * 1. INSTANT WELCOME EMAIL (Sent immediately to form submitter)
  */
-function sendInstantWelcomeEmail(name, email, days, city, category) {
+function sendInstantWelcomeEmail(name, email, days, city, category, regType, company, designation) {
   if (!email || typeof email !== 'string' || email.indexOf('@') === -1) {
     return 'Invalid email string: ' + String(email);
   }
 
-  var subject = "🎉 Welcome to Masters Kerala RE 2.0 EXPO26 - Pre-Registration Confirmed! (" + days + ")";
+  regType = regType || 'Visitor';
+  var typeTitle = (regType === 'Exhibitor') ? 'Exhibitor Registration Confirmed' : (regType === 'Visitor' ? 'Visitor Registration Confirmed' : 'Pre-Registration Confirmed');
+  var subject = "🎉 Welcome to Masters Kerala RE 2.0 EXPO26 - " + typeTitle + "! (" + days + ")";
 
   var dateRange = getSelectedDatesRange(days);
   var gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
                 "&text=" + encodeURIComponent("Masters Kerala RE 2.0 EXPO26 (" + days + ")") +
                 "&dates=" + dateRange.start + "/" + dateRange.end +
-                "&details=" + encodeURIComponent("Pre-Registration Confirmation for " + name + "\nCategory: " + (category || 'Visitor') + "\nSelected Days: " + days + "\nVenue: LuLu Mall, Thiruvananthapuram") +
+                "&details=" + encodeURIComponent(typeTitle + " for " + name + "\nCategory/Role: " + (category || regType) + (company ? ("\nCompany: " + company) : "") + "\nSelected Days: " + days + "\nVenue: LuLu Mall, Thiruvananthapuram") +
                 "&location=" + encodeURIComponent("LuLu Mall, Thiruvananthapuram, Kerala, India");
 
   var htmlBody = '<!DOCTYPE html>' +
@@ -217,7 +228,7 @@ function sendInstantWelcomeEmail(name, email, days, city, category) {
       '<tr>' +
         '<td style="background: linear-gradient(135deg, #025a27 0%, #047857 50%, #059669 100%); padding: 32px 24px; text-align: center;">' +
           '<div style="display:inline-block; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.4); color: #ffffff !important; font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 100px; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px;">' +
-            '✨ WELCOME TO MASTERS EXPO 2026' +
+            '✨ WELCOME TO MASTERS EXPO 2026 (' + regType.toUpperCase() + ')' +
           '</div>' +
           '<h1 style="margin: 6px 0; font-size: 24px; color: #ffffff !important; font-weight: 800; letter-spacing: -0.3px; line-height: 1.25;">Masters Kerala RE 2.0 EXPO26</h1>' +
           '<p style="margin: 6px 0 0 0; font-size: 13.5px; color: #e2e8f0 !important; font-weight: 500;">Kerala\'s Premier Renewable Energy Exhibition & Conference</p>' +
@@ -228,7 +239,7 @@ function sendInstantWelcomeEmail(name, email, days, city, category) {
       '<tr>' +
         '<td style="padding: 30px 24px; line-height: 1.6; background-color: #ffffff;">' +
           '<p style="font-size: 16px; color: #0f172a; margin-top: 0; margin-bottom: 12px; font-weight: 600;">Dear <strong>' + name + '</strong>,</p>' +
-          '<p style="font-size: 14.5px; color: #334155; margin-bottom: 24px; margin-top: 0;">Welcome! Thank you for pre-registering for <strong>Masters Kerala RE 2.0 EXPO26</strong>. Your spot has been successfully confirmed!</p>' +
+          '<p style="font-size: 14.5px; color: #334155; margin-bottom: 24px; margin-top: 0;">Welcome! Thank you for registering as a <strong>' + regType + '</strong> for <strong>Masters Kerala RE 2.0 EXPO26</strong>. Your spot has been successfully confirmed!</p>' +
 
           '<!-- CONFIRMATION DETAILS CARD -->' +
           '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #047857; border-radius: 12px; margin-bottom: 26px;">' +
@@ -236,8 +247,10 @@ function sendInstantWelcomeEmail(name, email, days, city, category) {
               '<td style="padding: 18px 20px;">' +
                 '<table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size: 14px;">' +
                   '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600; width: 130px;">Registrant:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">' + name + '</td></tr>' +
+                  '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Registration Type:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">' + regType + '</td></tr>' +
+                  (company ? ('<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Company / Firm:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">' + company + (designation ? (' (' + designation + ')') : '') + '</td></tr>') : '') +
                   '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Selected Days:</td><td style="padding: 6px 0; color: #047857; font-weight: 800;">' + days + ' (September 2026)</td></tr>' +
-                  '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Category:</td><td style="padding: 6px 0;"><span style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; padding: 2px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 700; display: inline-block;">' + (category || 'Visitor') + '</span></td></tr>' +
+                  '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Category:</td><td style="padding: 6px 0;"><span style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; padding: 2px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 700; display: inline-block;">' + (category || regType) + '</span></td></tr>' +
                   '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Exhibition Hours:</td><td style="padding: 6px 0; color: #1e293b; font-weight: 600;">10:00 AM – 7:00 PM IST</td></tr>' +
                   '<tr><td style="padding: 6px 0; color: #64748b; font-weight: 600;">Venue:</td><td style="padding: 6px 0; color: #0f172a; font-weight: 700;">LuLu Mall, Thiruvananthapuram</td></tr>' +
                 '</table>' +

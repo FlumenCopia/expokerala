@@ -58,6 +58,129 @@
         }
         .ex-reg-blk .submit-btn:hover { background: linear-gradient(135deg, #95c841, #7fee00); color: #0d1117; }
         .ex-reg-blk h2 { margin-bottom: 24px; color: #243546; }
+
+        /* Day Selector */
+        .day-selector { display: flex; gap: 8px; margin-top: 6px; margin-bottom: 14px; }
+        .day-btn {
+            flex: 1;
+            background: rgba(0,0,0,0.04);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 6px;
+            color: #4a5568;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+        .day-btn strong { display: block; font-size: 15px; color: #1a202c; margin-bottom: 2px; }
+        .day-btn * { pointer-events: none; }
+        .day-btn:hover { border-color: #7fee00; color: #1a202c; }
+        .day-btn.active { background: rgba(3,150,35,0.12); border-color: #047857; color: #047857; }
+        .day-btn.active strong { color: #047857; }
+
+        /* Success Overlay Modal */
+        #ex-success-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(13,17,23,0.95);
+            backdrop-filter: blur(16px);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+        #ex-success-modal.show { display: flex; animation: fadeInScale 0.4s ease forwards; }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.92); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .success-icon {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: rgba(3,150,35,0.15);
+            border: 2px solid #7fee00;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px;
+            color: #95c841;
+            margin-bottom: 20px;
+        }
+
+        .ex-email-notice {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(3,150,35,0.12);
+            border: 1px solid rgba(3,150,35,0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #e2e8f0;
+            font-size: 13.5px;
+            max-width: 480px;
+            margin: 16px 0;
+            text-align: left;
+        }
+        .ex-email-notice i { color: #95c841; font-size: 18px; flex-shrink: 0; }
+
+        .gcal-actions {
+            max-width: 480px;
+            width: 100%;
+            margin: 16px 0 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: left;
+        }
+        .gcal-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .gcal-title i { color: #f5c800; }
+        .gcal-buttons-container { display: flex; flex-direction: column; gap: 8px; }
+        .gcal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(66,133,244,0.15), rgba(52,168,83,0.15));
+            border: 1px solid rgba(66,133,244,0.35);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .gcal-btn:hover {
+            background: linear-gradient(135deg, rgba(66,133,244,0.28), rgba(52,168,83,0.28));
+            border-color: #4285f4;
+            color: #fff;
+        }
+        .success-back-btn {
+            color: #a0aec0;
+            font-size: 14px;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 24px;
+            border-radius: 100px;
+            transition: all 0.3s;
+        }
+        .success-back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
     </style>
 </head>
 
@@ -146,6 +269,22 @@
                                             <input type="text" placeholder="Country *" name="country" required>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="form-input">
+                                            <label style="display:block;font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#4a5568;margin-bottom:6px;">Which Day(s) Will You Attend / Exhibit?</label>
+                                            <div class="day-selector">
+                                                <button type="button" class="day-btn" data-day="Sep 25" onclick="toggleExpoDay(this, 'Sep 25')">
+                                                    <strong>25</strong>Sep &mdash; Fri
+                                                </button>
+                                                <button type="button" class="day-btn" data-day="Sep 26" onclick="toggleExpoDay(this, 'Sep 26')">
+                                                    <strong>26</strong>Sep &mdash; Sat
+                                                </button>
+                                                <button type="button" class="day-btn" data-day="Sep 27" onclick="toggleExpoDay(this, 'Sep 27')">
+                                                    <strong>27</strong>Sep &mdash; Sun
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <button type="submit" class="submit-btn" id="ex-submit-btn">Register as Exhibitor</button>
                                 <button type="button" class="submit-btn" id="ex-loading-btn" style="display:none;" disabled>
@@ -157,6 +296,27 @@
                 </div>
             </div>
         </section>
+
+        <!-- SUCCESS OVERLAY MODAL -->
+        <div id="ex-success-modal" role="dialog" aria-modal="true">
+            <div class="success-icon">&#10003;</div>
+            <h2 style="font-family:'Manrope',sans-serif;font-size:28px;font-weight:800;margin-bottom:10px;color:#fff;">Exhibitor Registration Successful! 🎉</h2>
+            <p style="font-size:14.5px;color:#a0aec0;max-width:440px;line-height:1.6;margin-bottom:16px;">
+                Thank you, <strong id="ex-success-name" style="color:#fff;"></strong>! Your space pre-booking / exhibitor registration for <strong>Masters Kerala RE 2.0 EXPO26</strong> has been received.
+            </p>
+
+            <div class="ex-email-notice" id="ex-email-notice" style="display:none;">
+                <i class="fa-solid fa-envelope-circle-check"></i>
+                <span>A welcome confirmation message and calendar details have been sent to <strong id="ex-success-email"></strong></span>
+            </div>
+
+            <div class="gcal-actions">
+                <p class="gcal-title"><i class="fa-solid fa-calendar-check"></i> Add to your Google Calendar:</p>
+                <div id="ex-gcal-buttons-container" class="gcal-buttons-container"></div>
+            </div>
+
+            <a href="index.html" class="success-back-btn">&#8592; Back to Main Site</a>
+        </div>
     </main>
 
     <!-- FOOTER -->
@@ -200,6 +360,90 @@
     </footer>
 
     <script>
+        var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxaVzLLwnvmS_QN4tXhxkqraRcy74PnsFLisq_HkOIWhESuxhCk55GDsu76bMeyzCni/exec';
+
+        window.selectedDays = [];
+        window.toggleExpoDay = function(btn, day) {
+            if (!btn || !day) return;
+            var idx = window.selectedDays.indexOf(day);
+            if (idx > -1) {
+                window.selectedDays.splice(idx, 1);
+                btn.classList.remove('active');
+            } else {
+                window.selectedDays.push(day);
+                btn.classList.add('active');
+            }
+        };
+
+        function generateGCalLinks(days) {
+            var dateMap = {
+                'Sep 25': { start: '20260925T043000Z', end: '20260925T133000Z', label: 'Sep 25 (Friday)' },
+                'Sep 26': { start: '20260926T043000Z', end: '20260926T133000Z', label: 'Sep 26 (Saturday)' },
+                'Sep 27': { start: '20260927T043000Z', end: '20260927T133000Z', label: 'Sep 27 (Sunday)' }
+            };
+
+            var container = document.getElementById('ex-gcal-buttons-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            var dayOrder = ['Sep 25', 'Sep 26', 'Sep 27'];
+            var activeDays = (days && days.length > 0) ? days : ['Sep 25', 'Sep 26', 'Sep 27'];
+            var sortedDays = activeDays.slice().sort(function(a, b) {
+                return dayOrder.indexOf(a) - dayOrder.indexOf(b);
+            });
+
+            if (sortedDays.length > 1) {
+                var firstDay = sortedDays[0];
+                var lastDay = sortedDays[sortedDays.length - 1];
+                var combinedStart = dateMap[firstDay] ? dateMap[firstDay].start : '20260925T043000Z';
+                var combinedEnd = dateMap[lastDay] ? dateMap[lastDay].end : '20260927T133000Z';
+                var combinedUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+                    '&text=' + encodeURIComponent('Masters Kerala RE 2.0 EXPO26 (' + sortedDays.join(', ') + ')') +
+                    '&dates=' + combinedStart + '/' + combinedEnd +
+                    '&details=' + encodeURIComponent('Exhibitor Registration for Masters Kerala RE 2.0 EXPO26.\nSelected Date(s): ' + sortedDays.join(', ') + '\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
+                    '&location=' + encodeURIComponent('Lulu Mall, Thiruvananthapuram, Kerala, India');
+
+                var combinedA = document.createElement('a');
+                combinedA.href = combinedUrl;
+                combinedA.target = '_blank';
+                combinedA.rel = 'noopener noreferrer';
+                combinedA.className = 'gcal-btn';
+                combinedA.style.borderColor = '#7fee00';
+                combinedA.style.background = 'linear-gradient(135deg, rgba(127,238,0,0.25), rgba(149,200,65,0.25))';
+                combinedA.innerHTML = '<span><i class="fa-brands fa-google"></i> Add All Selected Days (' + sortedDays.join(', ') + ')</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                container.appendChild(combinedA);
+            }
+
+            sortedDays.forEach(function(day) {
+                var info = dateMap[day];
+                if (info) {
+                    var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+                        '&text=' + encodeURIComponent('Masters Kerala RE 2.0 EXPO26 (' + day + ')') +
+                        '&dates=' + info.start + '/' + info.end +
+                        '&details=' + encodeURIComponent('Exhibitor Registration for Masters Kerala RE 2.0 EXPO26.\nDate: ' + day + '\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
+                        '&location=' + encodeURIComponent('Lulu Mall, Thiruvananthapuram, Kerala, India');
+
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.className = 'gcal-btn';
+                    a.innerHTML = '<span><i class="fa-brands fa-google"></i> Add ' + info.label + '</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                    container.appendChild(a);
+                }
+            });
+        }
+
+        function submitToGoogleSheet(data) {
+            if (!GOOGLE_SHEET_WEB_APP_URL) return Promise.resolve();
+            return fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                body: new URLSearchParams(data).toString()
+            });
+        }
+
         document.getElementById('exhibitorForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -211,6 +455,9 @@
             const formData = new FormData(this);
             formData.append('company_id',    '12');
             formData.append('exhibition_id', '20');
+
+            var activeDays = (window.selectedDays && window.selectedDays.length > 0) ? window.selectedDays : ['Sep 25', 'Sep 26', 'Sep 27'];
+            var daysStr = activeDays.join(', ');
 
             console.log('🚀 [Exhibitor Register] Submitting exhibitor registration form:', Object.fromEntries(formData.entries()));
 
@@ -230,12 +477,28 @@
                             pincode: formData.get('pincode'),
                             city: formData.get('city'),
                             state: formData.get('state'),
-                            country: formData.get('country')
+                            country: formData.get('country'),
+                            days: daysStr
                         }])
                 )
                 .then(res => console.log('✅ [Supabase Exhibitor] Record saved:', res))
                 .catch(err => console.warn('⚠️ [Supabase Exhibitor Notice]:', err));
             }
+
+            // Submit to Google Sheet Apps Script for Exhibitor Welcome Email & Calendar Add
+            var sheetData = {
+                registration_type: 'Exhibitor',
+                name: formData.get('name') || '',
+                mobile: formData.get('mobile') || '',
+                email: formData.get('email') || '',
+                firm_name: formData.get('firm_name') || '',
+                designation: formData.get('designation') || '',
+                city: formData.get('city') || '',
+                state: formData.get('state') || '',
+                country: formData.get('country') || '',
+                days: daysStr
+            };
+            submitToGoogleSheet(sheetData);
 
             fetch('https://event.rowbest.in/api/master-visitor-reg', {
                 method: 'POST',
@@ -243,16 +506,32 @@
             })
             .then(r => r.json())
             .then(data => {
-                if (data.status) {
-                    alert('✅ Exhibitor registration successful! We will contact you soon.');
-                    document.getElementById('exhibitorForm').reset();
+                const name = formData.get('name') || 'Exhibitor';
+                const email = formData.get('email');
+
+                document.getElementById('ex-success-name').textContent = name;
+                const emailNotice = document.getElementById('ex-email-notice');
+                if (email) {
+                    document.getElementById('ex-success-email').textContent = email;
+                    emailNotice.style.display = 'flex';
                 } else {
-                    alert(data.message || data.msg || 'Registration failed. Please check your inputs.');
+                    emailNotice.style.display = 'none';
                 }
+
+                generateGCalLinks(activeDays);
+
+                document.getElementById('ex-success-modal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+                document.getElementById('exhibitorForm').reset();
             })
             .catch(err => {
                 console.error(err);
-                alert('Network error. Please check your connection and try again.');
+                // Even if rowbest fails, display success modal if data sent
+                const name = formData.get('name') || 'Exhibitor';
+                document.getElementById('ex-success-name').textContent = name;
+                generateGCalLinks(activeDays);
+                document.getElementById('ex-success-modal').classList.add('show');
+                document.body.style.overflow = 'hidden';
             })
             .finally(() => {
                 submitBtn.style.display  = 'block';

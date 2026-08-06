@@ -583,14 +583,6 @@
             <!-- STAT CARDS -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon green"><i class="fa-solid fa-bolt"></i></div>
-                    <div class="stat-info">
-                        <h4>Pre-Registrations</h4>
-                        <div class="num" id="stat-pre">0</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
                     <div class="stat-icon blue"><i class="fa-solid fa-users"></i></div>
                     <div class="stat-info">
                         <h4>Visitor Registrations</h4>
@@ -607,6 +599,14 @@
                 </div>
 
                 <div class="stat-card">
+                    <div class="stat-icon green"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="stat-info">
+                        <h4>Pre-Registrations</h4>
+                        <div class="num" id="stat-pre">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
                     <div class="stat-icon purple"><i class="fa-solid fa-calendar-star"></i></div>
                     <div class="stat-info">
                         <h4>Sub-Event Registrations</h4>
@@ -618,12 +618,12 @@
             <!-- TABS HEADER -->
             <div class="tabs-header">
                 <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="switchTab('pre')"><i class="fa-solid fa-bolt"></i>
-                        Pre-Registrations</button>
-                    <button class="tab-btn" onclick="switchTab('visitor')"><i class="fa-solid fa-users"></i>
+                    <button class="tab-btn active" onclick="switchTab('visitor')"><i class="fa-solid fa-users"></i>
                         Visitors</button>
                     <button class="tab-btn" onclick="switchTab('exhibitor')"><i class="fa-solid fa-building"></i>
                         Exhibitors</button>
+                    <button class="tab-btn" onclick="switchTab('pre')"><i class="fa-solid fa-bolt"></i>
+                        Pre-Registrations</button>
                     <button class="tab-btn" onclick="switchTab('sub')"><i class="fa-solid fa-calendar-star"></i>
                         Sub-Events</button>
                     <button class="tab-btn" onclick="switchTab('schema')"><i class="fa-solid fa-database"></i> SQL
@@ -666,7 +666,7 @@
     </div>
 
     <script>
-        var currentTab = 'pre';
+        var currentTab = 'visitor';
         var cachedData = { pre: [], visitor: [], exhibitor: [], sub: [] };
 
         // AUTHENTICATION LOGIC
@@ -809,7 +809,7 @@
                         '</tr>';
                 });
             } else if (currentTab === 'visitor') {
-                html += '<th>Date & Time</th><th>Name</th><th>Mobile</th><th>Email</th><th>Visit Profile</th><th>Company</th><th>City</th><th>Action</th></tr></thead><tbody>';
+                html += '<th>Date & Time</th><th>Name</th><th>Mobile</th><th>Email</th><th>Visit Profile</th><th>Company</th><th>City</th><th>Selected Days</th><th>Action</th></tr></thead><tbody>';
                 list.forEach(function (r) {
                     html += '<tr>' +
                         '<td>' + formatDate(r.created_at) + '</td>' +
@@ -819,11 +819,12 @@
                         '<td><span class="badge-pill blue">' + escapeHtml(r.visit_profile || 'Visitor') + '</span></td>' +
                         '<td>' + escapeHtml(r.company_name || '—') + '</td>' +
                         '<td>' + escapeHtml(r.city || '—') + '</td>' +
+                        '<td><span class="badge-pill green">' + escapeHtml(r.days || 'All Days') + '</span></td>' +
                         '<td><button class="del-btn" onclick="deleteRecord(\'visitor_registrations\',' + r.id + ')"><i class="fa-solid fa-trash"></i></button></td>' +
                         '</tr>';
                 });
             } else if (currentTab === 'exhibitor') {
-                html += '<th>Date & Time</th><th>Name</th><th>Company Name</th><th>Designation</th><th>Mobile</th><th>Email</th><th>City/Country</th><th>Action</th></tr></thead><tbody>';
+                html += '<th>Date & Time</th><th>Name</th><th>Company Name</th><th>Designation</th><th>Mobile</th><th>Email</th><th>City/Country</th><th>Selected Days</th><th>Action</th></tr></thead><tbody>';
                 list.forEach(function (r) {
                     html += '<tr>' +
                         '<td>' + formatDate(r.created_at) + '</td>' +
@@ -833,6 +834,7 @@
                         '<td>' + escapeHtml(r.mobile || '—') + '</td>' +
                         '<td>' + escapeHtml(r.email || '—') + '</td>' +
                         '<td>' + escapeHtml((r.city || '') + (r.country ? ', ' + r.country : '')) + '</td>' +
+                        '<td><span class="badge-pill green">' + escapeHtml(r.days || 'All Days') + '</span></td>' +
                         '<td><button class="del-btn" onclick="deleteRecord(\'exhibitor_registrations\',' + r.id + ')"><i class="fa-solid fa-trash"></i></button></td>' +
                         '</tr>';
                 });

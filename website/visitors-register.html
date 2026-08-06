@@ -34,6 +34,83 @@
     src="https://www.facebook.com/tr?id=27988637077489028&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Meta Pixel Code -->
+    <style>
+        .day-selector { display: flex; gap: 8px; margin-top: 6px; margin-bottom: 14px; }
+        .day-btn {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 8px 6px;
+            color: #a0aec0;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+        .day-btn strong { display: block; font-size: 15px; color: #fff; margin-bottom: 2px; }
+        .day-btn * { pointer-events: none; }
+        .day-btn:hover { border-color: rgba(3,150,35,0.5); color: #fff; }
+        .day-btn.active { background: rgba(3,150,35,0.18); border-color: #7fee00; color: #95c841; }
+        .day-btn.active strong { color: #95c841; }
+
+        .pr-email-notice {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(3,150,35,0.12);
+            border: 1px solid rgba(3,150,35,0.3);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: #e2e8f0;
+            font-size: 13px;
+            margin: 14px 0;
+            text-align: left;
+        }
+        .pr-email-notice i { color: #95c841; font-size: 16px; flex-shrink: 0; }
+
+        .gcal-actions {
+            margin: 14px 0;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: left;
+        }
+        .gcal-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .gcal-title i { color: #f5c800; }
+        .gcal-buttons-container { display: flex; flex-direction: column; gap: 8px; }
+        .gcal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(66,133,244,0.15), rgba(52,168,83,0.15));
+            border: 1px solid rgba(66,133,244,0.35);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 12.5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .gcal-btn:hover {
+            background: linear-gradient(135deg, rgba(66,133,244,0.28), rgba(52,168,83,0.28));
+            border-color: #4285f4;
+            color: #fff;
+        }
+    </style>
 </head>
 
 <body>
@@ -163,6 +240,22 @@
                                         <input class="fr-rmv-str" type="text" placeholder="Enter Landmark" name="landmark">
                                     </div>
 
+                                    <!-- Expo Days Selector -->
+                                    <div class="vist-input" id="field-days">
+                                        <label style="display:block;font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#8899a6;margin-bottom:6px;">Which Day(s) Will You Attend?</label>
+                                        <div class="day-selector">
+                                            <button type="button" class="day-btn" data-day="Sep 25" onclick="toggleExpoDay(this, 'Sep 25')">
+                                                <strong>25</strong>Sep &mdash; Fri
+                                            </button>
+                                            <button type="button" class="day-btn" data-day="Sep 26" onclick="toggleExpoDay(this, 'Sep 26')">
+                                                <strong>26</strong>Sep &mdash; Sat
+                                            </button>
+                                            <button type="button" class="day-btn" data-day="Sep 27" onclick="toggleExpoDay(this, 'Sep 27')">
+                                                <strong>27</strong>Sep &mdash; Sun
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Agree checkbox -->
                                     <div class="vist-input">
                                         <div style="display:flex;align-items:baseline;gap:10px;">
@@ -213,12 +306,24 @@
             <div class="bdg-modal">
                 <div class="bdg-contain">
                     <div><span class="close"><i class="fa-solid fa-xmark"></i></span></div>
-                    <div class="bdge-cont"><p>Registration Successful! 🎉</p></div>
-                    <div class="vist-dt-blk">
-                        <div class="mnth"><span>steptember 2026</span></div>
-                        <div class="vis-dt"><span><ul><li>25</li><li>26</li><li>27</li></ul></span></div>
+                    <div class="bdge-cont">
+                        <p style="font-size:22px;font-weight:800;margin-bottom:6px;">Registration Successful! 🎉</p>
+                        <p style="font-size:14px;color:#a0aec0;">Thank you, <strong id="success-name" style="color:#fff;"></strong>! Your spot at <strong>Masters Kerala RE 2.0 EXPO26</strong> is secured.</p>
                     </div>
-                    <div class="generate-bdg">
+
+                    <!-- EMAIL REMINDER NOTIFICATION -->
+                    <div class="pr-email-notice" id="pr-email-notice" style="display:none;">
+                        <i class="fa-solid fa-envelope-circle-check"></i>
+                        <span>A welcome email &amp; calendar details have been sent to <strong id="success-email"></strong></span>
+                    </div>
+
+                    <!-- GOOGLE CALENDAR BUTTONS CONTAINER -->
+                    <div class="gcal-actions">
+                        <p class="gcal-title"><i class="fa-solid fa-calendar-check"></i> Add to your Google Calendar:</p>
+                        <div id="gcal-buttons-container" class="gcal-buttons-container"></div>
+                    </div>
+
+                    <div class="generate-bdg" style="margin-top:14px;">
                         <a id="generateBadge" href="#" target="_blank">Generate &amp; Print Badge</a>
                     </div>
                 </div>
@@ -262,6 +367,80 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        var GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxaVzLLwnvmS_QN4tXhxkqraRcy74PnsFLisq_HkOIWhESuxhCk55GDsu76bMeyzCni/exec';
+
+        window.selectedDays = [];
+        window.toggleExpoDay = function(btn, day) {
+            if (!btn || !day) return;
+            var idx = window.selectedDays.indexOf(day);
+            if (idx > -1) {
+                window.selectedDays.splice(idx, 1);
+                btn.classList.remove('active');
+            } else {
+                window.selectedDays.push(day);
+                btn.classList.add('active');
+            }
+        };
+
+        function generateGCalLinks(days) {
+            var dateMap = {
+                'Sep 25': { start: '20260925T043000Z', end: '20260925T133000Z', label: 'Sep 25 (Friday)' },
+                'Sep 26': { start: '20260926T043000Z', end: '20260926T133000Z', label: 'Sep 26 (Saturday)' },
+                'Sep 27': { start: '20260927T043000Z', end: '20260927T133000Z', label: 'Sep 27 (Sunday)' }
+            };
+
+            var container = document.getElementById('gcal-buttons-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            var dayOrder = ['Sep 25', 'Sep 26', 'Sep 27'];
+            var activeDays = (days && days.length > 0) ? days : ['Sep 25', 'Sep 26', 'Sep 27'];
+            var sortedDays = activeDays.slice().sort(function(a, b) {
+                return dayOrder.indexOf(a) - dayOrder.indexOf(b);
+            });
+
+            if (sortedDays.length > 1) {
+                var firstDay = sortedDays[0];
+                var lastDay = sortedDays[sortedDays.length - 1];
+                var combinedStart = dateMap[firstDay] ? dateMap[firstDay].start : '20260925T043000Z';
+                var combinedEnd = dateMap[lastDay] ? dateMap[lastDay].end : '20260927T133000Z';
+                var combinedUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+                    '&text=' + encodeURIComponent('Masters Kerala RE 2.0 EXPO26 (' + sortedDays.join(', ') + ')') +
+                    '&dates=' + combinedStart + '/' + combinedEnd +
+                    '&details=' + encodeURIComponent('Visitor Registration for Masters Kerala RE 2.0 EXPO26.\nSelected Date(s): ' + sortedDays.join(', ') + '\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
+                    '&location=' + encodeURIComponent('Lulu Mall, Thiruvananthapuram, Kerala, India');
+
+                var combinedA = document.createElement('a');
+                combinedA.href = combinedUrl;
+                combinedA.target = '_blank';
+                combinedA.rel = 'noopener noreferrer';
+                combinedA.className = 'gcal-btn';
+                combinedA.style.borderColor = '#7fee00';
+                combinedA.style.background = 'linear-gradient(135deg, rgba(127,238,0,0.25), rgba(149,200,65,0.25))';
+                combinedA.innerHTML = '<span><i class="fa-brands fa-google"></i> Add All Selected Days (' + sortedDays.join(', ') + ')</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                container.appendChild(combinedA);
+            }
+
+            sortedDays.forEach(function(day) {
+                var info = dateMap[day];
+                if (info) {
+                    var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+                        '&text=' + encodeURIComponent('Masters Kerala RE 2.0 EXPO26 (' + day + ')') +
+                        '&dates=' + info.start + '/' + info.end +
+                        '&details=' + encodeURIComponent('Visitor Registration for Masters Kerala RE 2.0 EXPO26.\nDate: ' + day + '\nLocation: Lulu Mall, Trivandrum\nTime: 10:00 AM - 7:00 PM IST') +
+                        '&location=' + encodeURIComponent('Lulu Mall, Thiruvananthapuram, Kerala, India');
+
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.className = 'gcal-btn';
+                    a.innerHTML = '<span><i class="fa-brands fa-google"></i> Add ' + info.label + '</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>';
+                    container.appendChild(a);
+                }
+            });
+        }
+
         // Sync country hidden field from select
         document.getElementById('code').addEventListener('change', function() {
             const selected = this.options[this.selectedIndex];
@@ -292,6 +471,16 @@
             });
         });
 
+        function submitToGoogleSheet(data) {
+            if (!GOOGLE_SHEET_WEB_APP_URL) return Promise.resolve();
+            return fetch(GOOGLE_SHEET_WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                body: new URLSearchParams(data).toString()
+            });
+        }
+
         // FORM SUBMISSION
         document.getElementById('visitorRegisterForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -304,6 +493,9 @@
             const formData = new FormData(this);
             formData.append('company_id',    '12');
             formData.append('exhibition_id', '20');
+
+            var activeDays = (window.selectedDays && window.selectedDays.length > 0) ? window.selectedDays : ['Sep 25', 'Sep 26', 'Sep 27'];
+            var daysStr = activeDays.join(', ');
 
             console.log('🚀 [Visitor Register] Submitting visitor registration form:', Object.fromEntries(formData.entries()));
 
@@ -326,12 +518,30 @@
                             district: formData.get('district'),
                             state: formData.get('state'),
                             pincode: formData.get('pincode'),
-                            landmark: formData.get('landmark')
+                            landmark: formData.get('landmark'),
+                            days: daysStr
                         }])
                 )
                 .then(res => console.log('✅ [Supabase Visitor] Record saved:', res))
                 .catch(err => console.warn('⚠️ [Supabase Visitor Notice]:', err));
             }
+
+            // Submit to Google Sheet Apps Script for Welcome Email & Calendar Add
+            var sheetData = {
+                registration_type: 'Visitor',
+                name: formData.get('name') || '',
+                countryCode: formData.get('countryCode') || '',
+                mobile: formData.get('mobile') || '',
+                email: formData.get('email') || '',
+                city: formData.get('city') || '',
+                district: formData.get('district') || '',
+                state: formData.get('state') || '',
+                visit_profile: formData.get('visit_profile') || '',
+                company_name: formData.get('company_name') || '',
+                designation: formData.get('designation') || '',
+                days: daysStr
+            };
+            submitToGoogleSheet(sheetData);
 
             fetch('https://event.rowbest.in/api/master-visitor-reg', {
                 method: 'POST',
@@ -352,6 +562,20 @@
                     const qrId   = data.id   || data.qr_id   || '';
                     const badgeNo= data.badge_id || data.badge_no || '';
                     const url = `badge.html?qr_id=${qrId}&badge_no=${badgeNo}&visitor=${encodeURIComponent(JSON.stringify(visitor))}`;
+                    
+                    document.getElementById('success-name').textContent = formData.get('name') || 'Visitor';
+                    
+                    const email = formData.get('email');
+                    const emailNotice = document.getElementById('pr-email-notice');
+                    if (email) {
+                        document.getElementById('success-email').textContent = email;
+                        emailNotice.style.display = 'flex';
+                    } else {
+                        emailNotice.style.display = 'none';
+                    }
+
+                    generateGCalLinks(activeDays);
+
                     document.getElementById('generateBadge').href = url;
                     document.querySelector('.bdg-overlay').classList.add('show');
                     document.querySelector('.bdg-modal').classList.add('show');
