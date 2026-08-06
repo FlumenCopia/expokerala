@@ -449,10 +449,12 @@ top: 0 ;
 
 .ind-cnct-btn p {
     padding: 8px 40px;
-    background-color: #01A64E;
+    background: linear-gradient(135deg, #7fee00, #95c841);
     border-radius: 5px;
-    color: #fff;
+    color: #ffffff;
+    font-weight: 600;
     width: fit-content;
+    transition: all 0.3s ease;
 }
 
 .pg-cnt-btn {
@@ -619,22 +621,26 @@ top: 0 ;
 
 .mn-btns .p1 {
     padding: 8px 30px;
-    background-color: #79C143;
+    background: linear-gradient(135deg, #7fee00, #95c841);
     border-radius: 5px;
-    color: #fff;
+    color: #ffffff;
+    font-weight: 600;
     width: fit-content;
     cursor: pointer;
     border: 1px solid #ffffff;
+    transition: all 0.3s ease;
 }
 
 .mn-btns .p2 {
     padding: 8px 30px;
-    background-color: #01A64E;
+    background: linear-gradient(135deg, #7fee00, #95c841);
     border-radius: 5px;
-    color: #fff;
+    color: #ffffff;
+    font-weight: 600;
     width: fit-content;
     cursor: pointer;
     border: 1px solid #ffffff;
+    transition: all 0.3s ease;
 }
 
 .ind2 {
@@ -646,7 +652,7 @@ top: 0 ;
     width: fit-content;
     margin-left: 73px;
     margin-bottom: 10px;
-    color: #79C143;
+    color: #7fee00;
 }
 
 .h3::after {
@@ -654,7 +660,7 @@ top: 0 ;
     content: "";
     width: 60px;
     height: 2px;
-    background-color: #79C143;
+    background: linear-gradient(90deg, #7fee00, #95c841);
     left: -85%;
     bottom: 6px;
 }
@@ -663,7 +669,7 @@ top: 0 ;
     content: "";
     width: 60px;
     height: 2px;
-    background-color: #79C143;
+    background: linear-gradient(90deg, #7fee00, #95c841);
     left: -39%;
     bottom: 6px;
 }
@@ -698,14 +704,16 @@ top: 0 ;
 .ind2-inr-flx-rgt .p {
     font-size: 16px;
     padding: 8px 15px;
-    background-color: #79C143;
+    background: linear-gradient(135deg, #7fee00, #95c841);
     width: fit-content;
     margin-bottom: 20px;
     border-radius: 5px;
     display: flex;
     align-items: start;
     gap: 10px;
-    color: #fff;
+    color: #ffffff;
+    font-weight: 600;
+}
 
 }
 
@@ -1394,12 +1402,14 @@ top: 0 ;
 }
 .ind8 .p{
     padding: 7px 30px;
-    background-color: #01A64E;
+    background: linear-gradient(135deg, #7fee00, #95c841);
     color: #ffffff;
+    font-weight: 600;
     border-radius: 5px;
     margin: 40px auto 0 auto;
     cursor: pointer;
     width: fit-content;
+    transition: all 0.3s ease;
 }
 
 .inpts{
@@ -1437,7 +1447,7 @@ top: 0 ;
     text-align: center;
     margin-top: 20px;
     font-size: 14px;
-    color: #0d1117;
+    color: #ffffff;
     font-weight: 700;
     padding: 12px;
     width: 100%;
@@ -1449,6 +1459,7 @@ top: 0 ;
 }
 .cnt-frm-bx button:hover {
     background: linear-gradient(135deg, #95c841, #7fee00);
+    color: #ffffff;
 }
 .map{
     width: 100%;
@@ -1676,7 +1687,7 @@ top: 0 ;
 .vist-input button {
     background: linear-gradient(135deg, #7fee00, #95c841);
     border: none;
-    color: #0d1117;
+    color: #ffffff;
     padding: 20px;
     border-radius: 30px;
     width: 100%;
@@ -1703,7 +1714,7 @@ top: 0 ;
 
 .vist-input button:hover {
     background: linear-gradient(135deg, #95c841, #7fee00);
-    color: #0d1117;
+    color: #ffffff;
 }
 
 .visit-cont-blk {
@@ -1979,12 +1990,16 @@ footer {
 .foot-logo h3{
     padding: 10px 30px;
     width: fit-content;
-    background-color: #039623;
-    color: #fff;
-    border-radius: 4px;
-    font-weight: 100;
+    background: linear-gradient(135deg, #7fee00, #95c841);
+    color: #ffffff;
+    border-radius: 6px;
+    font-weight: 600;
     font-size: 15px;
     margin-top: 20px;
+    transition: all 0.3s ease;
+}
+.foot-logo h3:hover {
+    background: linear-gradient(135deg, #95c841, #7fee00);
 }
 
 .foot-logo p{
@@ -2064,7 +2079,7 @@ footer {
 .bk-tp-btn button {
     background: linear-gradient(135deg, #7fee00, #95c841);
     padding: 8px 10px;
-    color: #0d1117;
+    color: #ffffff;
     border: none;
     border-radius: 7px;
     font-size: 22px;
